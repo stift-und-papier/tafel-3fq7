@@ -2,8 +2,9 @@
    TO-DO – Aufgaben als Liste (Typ heißt weiter „stundenplan“, damit gespeicherte Fenster bleiben).
    Kästchen antippen = abhaken, nochmal antippen = Haken weg (Reihenfolge egal).
    Text antippen = „gerade dran“ (hervorgehoben).
+   − / + rechts: Text der Aufgabe verbergen / zeigen (verborgenen Text antippen zeigt ihn auch).
    Zahnrad: Aufgaben eintragen, Farbe wählen, sortieren, löschen.
-   daten: { schritte: [{ id, text, farbe, fertig }], jetzt: id | null }
+   daten: { schritte: [{ id, text, farbe, fertig, zu }], jetzt: id | null }
    ============================================================ */
 (function () {
   "use strict";
@@ -26,7 +27,7 @@
     erstelle: function (el, d, speichere) {
       if (!Array.isArray(d.schritte)) d.schritte = [];
       d.schritte = d.schritte.filter(gueltig);
-      d.schritte.forEach(function (s) { if (FARB_IDS.indexOf(s.farbe) < 0) s.farbe = "teal"; s.fertig = !!s.fertig; });
+      d.schritte.forEach(function (s) { if (FARB_IDS.indexOf(s.farbe) < 0) s.farbe = "teal"; s.fertig = !!s.fertig; s.zu = !!s.zu; });
       if (!d.schritte.some(function (s) { return s.id === d.jetzt; })) d.jetzt = null;
 
       el.innerHTML = '<div class="ablauf"><ol class="rows ablauf__liste kein-ziehen"></ol></div>';
@@ -46,7 +47,7 @@
         }
         d.schritte.forEach(function (s, i) {
           var li = document.createElement("li");
-          li.className = "row ablauf__schritt" + (s.id === d.jetzt ? " is-jetzt" : "") + (s.fertig ? " is-fertig" : "");
+          li.className = "row ablauf__schritt" + (s.id === d.jetzt ? " is-jetzt" : "") + (s.fertig ? " is-fertig" : "") + (s.zu ? " is-zu" : "");
           li.dataset.farbe = s.farbe;
           var haken = knopf("ablauf__haken", s.fertig ? "✓" : "", "Aufgabe " + (i + 1) + " abhaken");
           haken.setAttribute("aria-pressed", s.fertig);
@@ -57,21 +58,25 @@
             zeige();
           });
           var text = knopf("ablauf__text", "");
-          text.textContent = s.text;
+          text.textContent = s.zu ? "Aufgabe " + (i + 1) : s.text;
           if (s.id === d.jetzt) text.setAttribute("aria-current", "step");
           text.addEventListener("click", function () {
-            d.jetzt = d.jetzt === s.id ? null : s.id;
+            if (s.zu) s.zu = false;   // verborgen: erst einmal nur aufdecken
+            else d.jetzt = d.jetzt === s.id ? null : s.id;
             speichere();
             zeige();
           });
-          li.append(haken, text);
+          var klappe = knopf("widget__klappe ablauf__klappe", s.zu ? "+" : "−", (s.zu ? "Text von Aufgabe " + (i + 1) + " zeigen" : "Text von Aufgabe " + (i + 1) + " verbergen"));
+          klappe.setAttribute("aria-expanded", !s.zu);
+          klappe.addEventListener("click", function () { s.zu = !s.zu; speichere(); zeige(); });
+          li.append(haken, text, klappe);
           ol.appendChild(li);
         });
       }
 
       // ---------- Aufgaben bearbeiten (Arbeitskopie, erst „Fertig“ speichert) ----------
       function bearbeite() {
-        var neu = d.schritte.map(function (s) { return { id: s.id, text: s.text, farbe: s.farbe, fertig: s.fertig }; });
+        var neu = d.schritte.map(function (s) { return { id: s.id, text: s.text, farbe: s.farbe, fertig: s.fertig, zu: s.zu }; });
         var box = document.createElement("div");
         box.innerHTML = '<ol class="rows ablauf__bearbeiten"></ol>';
         var liste = box.querySelector("ol");
@@ -81,7 +86,7 @@
           var vorher = neu[neu.length - 1];
           // Vorschlag: nächste Farbe nach der letzten, damit Nachbarn sich unterscheiden
           var farbe = vorher ? FARB_IDS[(FARB_IDS.indexOf(vorher.farbe) + 1) % FARB_IDS.length] : FARB_IDS[0];
-          neu.push({ id: T.neueId(), text: "", farbe: farbe, fertig: false });
+          neu.push({ id: T.neueId(), text: "", farbe: farbe, fertig: false, zu: false });
           male();
           var felder = liste.querySelectorAll("input");
           felder[felder.length - 1].focus();

@@ -439,6 +439,78 @@ label.btn { cursor: pointer; }
 .text__feld p, .text__feld ul, .text__feld ol { margin: 0 0 .4em; }
 .text__feld ul, .text__feld ol, .folie--text ul { padding-left: 1.3em; }
 
+/* Formen ohne Fenster: Gedankenblase, Sprechblase, Infokasten (der Rand bleibt zum Ziehen frei) */
+.text[data-form="gedanke"], .text[data-form="sprechblase"] {
+  position: relative;
+  background: var(--white);
+  border: var(--frame-width) solid var(--c-petrol-dark);
+  box-shadow: var(--shadow-sm);
+}
+.text[data-form="sprechblase"] { border-radius: 28px; padding: 18px 24px; }
+.text[data-form="gedanke"] { border-radius: 48px; padding: 26px 36px; }
+/* Platz für den Zipfel auf seiner Seite */
+.text[data-form="sprechblase"][data-zipfel^="unten"] { margin-bottom: 30px; }
+.text[data-form="sprechblase"][data-zipfel^="oben"] { margin-top: 30px; }
+.text[data-form="sprechblase"][data-zipfel="links"] { margin-left: 30px; }
+.text[data-form="sprechblase"][data-zipfel="rechts"] { margin-right: 30px; }
+.text[data-form="gedanke"][data-zipfel^="unten"] { margin-bottom: 62px; }
+.text[data-form="gedanke"][data-zipfel^="oben"] { margin-top: 62px; }
+.text[data-form="gedanke"][data-zipfel="links"] { margin-left: 62px; }
+.text[data-form="gedanke"][data-zipfel="rechts"] { margin-right: 62px; }
+.text[data-form="gedanke"]::before, .text[data-form="gedanke"]::after,
+.text[data-form="sprechblase"]::before, .text[data-form="sprechblase"]::after { content: ""; position: absolute; pointer-events: none; width: 0; height: 0; }
+
+/* Sprechblase: dunkles Dreieck (::before), darüber ein kleineres weißes (::after) deckt den Rand ab */
+[data-form="sprechblase"][data-zipfel="unten-links"]::before  { left: 44px; bottom: -28px; border-top: 28px solid var(--c-petrol-dark); border-right: 28px solid transparent; }
+[data-form="sprechblase"][data-zipfel="unten-links"]::after   { left: 46.5px; bottom: -22px; border-top: 23px solid var(--white); border-right: 23px solid transparent; }
+[data-form="sprechblase"][data-zipfel="unten-rechts"]::before { right: 44px; bottom: -28px; border-top: 28px solid var(--c-petrol-dark); border-left: 28px solid transparent; }
+[data-form="sprechblase"][data-zipfel="unten-rechts"]::after  { right: 46.5px; bottom: -22px; border-top: 23px solid var(--white); border-left: 23px solid transparent; }
+[data-form="sprechblase"][data-zipfel="oben-links"]::before   { left: 44px; top: -28px; border-bottom: 28px solid var(--c-petrol-dark); border-right: 28px solid transparent; }
+[data-form="sprechblase"][data-zipfel="oben-links"]::after    { left: 46.5px; top: -22px; border-bottom: 23px solid var(--white); border-right: 23px solid transparent; }
+[data-form="sprechblase"][data-zipfel="oben-rechts"]::before  { right: 44px; top: -28px; border-bottom: 28px solid var(--c-petrol-dark); border-left: 28px solid transparent; }
+[data-form="sprechblase"][data-zipfel="oben-rechts"]::after   { right: 46.5px; top: -22px; border-bottom: 23px solid var(--white); border-left: 23px solid transparent; }
+[data-form="sprechblase"][data-zipfel="links"]::before  { left: -28px; top: calc(50% - 14px); border-right: 28px solid var(--c-petrol-dark); border-top: 14px solid transparent; border-bottom: 14px solid transparent; }
+[data-form="sprechblase"][data-zipfel="links"]::after   { left: -22px; top: calc(50% - 11.5px); border-right: 23px solid var(--white); border-top: 11.5px solid transparent; border-bottom: 11.5px solid transparent; }
+[data-form="sprechblase"][data-zipfel="rechts"]::before { right: -28px; top: calc(50% - 14px); border-left: 28px solid var(--c-petrol-dark); border-top: 14px solid transparent; border-bottom: 14px solid transparent; }
+[data-form="sprechblase"][data-zipfel="rechts"]::after  { right: -22px; top: calc(50% - 11.5px); border-left: 23px solid var(--white); border-top: 11.5px solid transparent; border-bottom: 11.5px solid transparent; }
+
+/* Gedankenblase: zwei kleine Kreise, der kleinere weiter weg */
+.text[data-form="gedanke"]::before, .text[data-form="gedanke"]::after {
+  border-radius: 50%;
+  background: var(--white);
+  border: var(--frame-width) solid var(--c-petrol-dark);
+}
+.text[data-form="gedanke"]::before { width: 28px; height: 28px; }
+.text[data-form="gedanke"]::after { width: 16px; height: 16px; }
+[data-form="gedanke"][data-zipfel="unten-links"]::before  { left: 56px; bottom: -38px; }
+[data-form="gedanke"][data-zipfel="unten-links"]::after   { left: 36px; bottom: -60px; }
+[data-form="gedanke"][data-zipfel="unten-rechts"]::before { right: 56px; bottom: -38px; }
+[data-form="gedanke"][data-zipfel="unten-rechts"]::after  { right: 36px; bottom: -60px; }
+[data-form="gedanke"][data-zipfel="oben-links"]::before   { left: 56px; top: -38px; }
+[data-form="gedanke"][data-zipfel="oben-links"]::after    { left: 36px; top: -60px; }
+[data-form="gedanke"][data-zipfel="oben-rechts"]::before  { right: 56px; top: -38px; }
+[data-form="gedanke"][data-zipfel="oben-rechts"]::after   { right: 36px; top: -60px; }
+[data-form="gedanke"][data-zipfel="links"]::before  { left: -38px; top: calc(50% - 14px); }
+[data-form="gedanke"][data-zipfel="links"]::after   { left: -60px; top: calc(50% + 6px); }
+[data-form="gedanke"][data-zipfel="rechts"]::before { right: -38px; top: calc(50% - 14px); }
+[data-form="gedanke"][data-zipfel="rechts"]::after  { right: -60px; top: calc(50% + 6px); }
+
+/* Markerfarben (ohne Angabe: Gelb aus --mark) und Größen für markierten Text */
+mark[data-farbe="tuerkis"] { background: linear-gradient(transparent 55%, var(--tint-teal-35) 55%); }
+mark[data-farbe="gruen"] { background: linear-gradient(transparent 55%, var(--c-sage) 55%); }
+mark[data-farbe="orange"] { background: linear-gradient(transparent 55%, var(--c-orange) 55%); }
+mark[data-farbe="rosa"] { background: linear-gradient(transparent 55%, var(--c-coral-soft) 55%); }
+.text__feld span[data-groesse="klein"] { font-size: .7em; }
+.text__feld span[data-groesse="gross"] { font-size: 1.5em; }
+.text__feld span[data-groesse="riesig"] { font-size: 2.2em; line-height: 1.15; }
+
+/* Infokasten wie der Hinweis „Tippe unten auf ein Widget …“ */
+.text[data-form="info"] {
+  padding: 14px 18px;
+  background: var(--tint-teal-8);
+  border: var(--frame-width) dashed var(--c-teal);
+}
+
 /* ============================================================
    FOLIEN – Bühne, darunter Pfeile und Zähler
    ============================================================ */
@@ -550,6 +622,9 @@ label.btn { cursor: pointer; }
 .ablauf__schritt.is-jetzt { background: var(--active-bg); color: var(--active-text); box-shadow: 4px 4px 0 var(--active-accent); }
 .ablauf__schritt.is-fertig { background: var(--cream-deep); color: var(--text-muted); box-shadow: none; }
 .ablauf__schritt.is-fertig .ablauf__text { text-decoration: line-through; }
+.ablauf__klappe { margin-left: auto; align-self: center; color: var(--text); }
+.ablauf__schritt.is-zu .ablauf__text { color: var(--text-muted); font-style: italic; }
+.ablauf__schritt.is-jetzt.is-zu .ablauf__text { color: inherit; }
 .ablauf__haken:focus-visible, .ablauf__text:focus-visible, .ablauf__farbe:focus-visible { outline: 3px solid var(--mark); outline-offset: 2px; }
 
 /* Dialog „To-Do bearbeiten“: Feld, Farbkästchen, Knöpfe in einer Zeile (bricht um, wenn zu schmal) */

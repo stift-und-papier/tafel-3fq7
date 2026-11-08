@@ -4,7 +4,7 @@
    Größe: an den vier Ecken ziehen. Auswahl zeigt Ecken und Werkzeugleiste.
 
    Ein Widget-Typ meldet sich mit Tafel.registriere(typ, art) an:
-   art = { titel, icon, frei?, farbwahl?, vorher()?, groesse: {b, h}, min: {b, h},
+   art = { titel, icon, frei? (true oder Funktion(daten) → true/false), farbwahl?, vorher()?, groesse: {b, h}, min: {b, h},
            erstelle(inhaltEl, daten, speichere) → optional { entferne(), einstellungen() } }
    „daten“ ist das gespeicherte Objekt des Widgets: ändern, dann speichere() aufrufen.
    Stift-Knopf: eigener Fenstername (w.name), bei farbwahl auch Titelleiste und Fensterkörper (je 3 Stile, w.kopf / w.koerper).
@@ -114,14 +114,16 @@
 
   function baue(w, z) {
     var a = art(w);
+    var frei = typeof a.frei === "function" ? a.frei(w.daten || {}) : a.frei;
+    if (frei) w.zu = false;   // frei stehend gibt es kein Einklappen
     var el = document.createElement("section");
     el.dataset.id = w.id;
     el.style.zIndex = z;
     el.setAttribute("aria-label", a.titel);
     var ecken = '<span class="widget__ecke" data-ecke="nw"></span><span class="widget__ecke" data-ecke="ne"></span>' +
       '<span class="widget__ecke" data-ecke="sw"></span><span class="widget__ecke" data-ecke="se"></span>';
-    if (a.frei) {
-      // frei stehend (Lehrer:in): kein Fenster, nur Inhalt und Werkzeug beim Antippen
+    if (frei) {
+      // frei stehend (Lehrer:in, Sprech-/Gedankenblase, Infokasten): kein Fenster, nur Inhalt und Werkzeug beim Antippen
       el.className = "widget widget--frei";
       el.innerHTML = '<div class="widget__werkzeug"></div><div class="widget__inhalt"></div>' + ecken;
     } else {
@@ -146,7 +148,7 @@
     var inst = a.erstelle(el.querySelector(".widget__inhalt"), w.daten, T.speichere) || {};
     instanzen[w.id] = inst;
     var wz = el.querySelector(".widget__werkzeug");
-    if (!a.frei) wz.appendChild(T.iconKnopf("stift", a.farbwahl ? "Name und Farben ändern" : "Name ändern", function () { passeAn(el, w, a); }));
+    if (!frei) wz.appendChild(T.iconKnopf("stift", a.farbwahl ? "Name und Farben ändern" : "Name ändern", function () { passeAn(el, w, a); }));
     if (inst.einstellungen) wz.appendChild(T.iconKnopf("zahnrad", "Einstellungen", inst.einstellungen));
     wz.appendChild(T.iconKnopf("muell", "Widget löschen", function () { entferne(w.id); }));
   }
