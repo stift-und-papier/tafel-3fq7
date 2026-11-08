@@ -106,12 +106,12 @@ Alle Beispiele siehst du in `styleguide.html`. Dort kannst du den HTML-Code absc
 |---|---|---|
 | `.header-strip` + `.label` + `.counter` | Kopfzeile: Label links, Zähler „01 / 08“ rechts | Label mit dem Kursnamen ganz oben; Zähler unten im Folien-Widget |
 | `.window` | Fenster-Karte: weiß, dünner Rahmen, oranger Schatten | jedes Widget, jeder Dialog |
-| `.window__titlebar`, `.window__title`, `.window__tools`, `.window__buttons` | Titelleiste mit Verlauf, Titel-Schild mit Icon, Werkzeug und drei Deko-Knöpfen | Kopf jedes Widgets |
+| `.window__titlebar`, `.window__title`, `.window__tools` | Titelleiste mit Verlauf, Titel-Schild mit Icon und Werkzeug (ohne Deko-Knöpfe, auf ihren Wunsch) | Kopf jedes Widgets |
 | `.window__body` | Innenfläche | Dialoge |
 | `.window--hero` | Titelkarte mit zartem Verlauf und Gitter | Stilvorlage |
 | `.chip`, `.chip--peach` | Tag-Chip (weiß) und Meta-Chip (helles Orange) | Namensliste im Zufall-Widget (antippen = fehlt heute) |
 | `mark` | Textmarker (untere Hälfte der Zeile in Sonne) | Text-Widget |
-| `.rows` / `.row` / `.row__icon` / `.row__num` | Listenzeilen mit Icon- oder Nummern-Block | Dialoge „Folien bearbeiten“ und „Nicht zusammen“ |
+| `.rows` / `.row` / `.row__icon` / `.row__num` | Listenzeilen mit Icon- oder Nummern-Block | Dialoge „Folien bearbeiten“ und „Nicht zusammen“, Aufgaben im To-Do (Farbstreifen links aus der Palette, „gerade dran“ Petrol-dunkel mit Korallen-Schatten) |
 | `.callout` | Hinweis-Kasten, gestrichelt | „Tippe unten auf ein Widget …“ |
 | `.btn`, `.btn--primary`, `.btn--sun`, `.btn--square`, `.btn--small` | Knöpfe (`.btn--sun`: sonnengelber zweiter Hauptknopf) | überall; `.btn--sun` bei „Einteilen“ im Zufall-Widget |
 | `.tab` | Reiter (aktiv: Petrol-dunkel mit Korallen-Rand) | Seiten im Zufall-Widget (Ziehen, Gruppen, Liste); die Kurs-Reiter nutzen `.reiter` mit demselben Aussehen |
@@ -120,7 +120,7 @@ Alle Beispiele siehst du in `styleguide.html`. Dort kannst du den HTML-Code absc
 
 ### Fenster-Stile und Einklappen
 
-Bild, Text und Folien lassen sich über den Stift-Knopf einfärben, damit man sie auf der Tafel unterscheiden kann. Gespeichert wird das am Widget (`kopf`, `koerper`), die Regeln stehen in `css/app.css`.
+Bild, Text, Folien und To-Do lassen sich über den Stift-Knopf einfärben, damit man sie auf der Tafel unterscheiden kann. Gespeichert wird das am Widget (`kopf`, `koerper`), die Regeln stehen in `css/app.css`.
 
 | Teil | Stil 1 (Standard) | Stil 2 | Stil 3 |
 |---|---|---|---|

@@ -113,14 +113,6 @@ mark, .mark {
 .window__title > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .window__title img { flex: none; width: 14px; height: 14px; }
 .window__tools { margin-left: auto; display: flex; align-items: center; gap: 6px; }
-/* drei dekorative Fenster-Knöpfe */
-.window__buttons { display: flex; gap: 4px; }
-.window__buttons i {
-  width: 14px;
-  height: 14px;
-  background: var(--white);
-  border: var(--frame-width) solid var(--c-petrol-dark);
-}
 .window__body { flex: 1; min-height: 0; padding: 28px 32px 32px; display: flex; flex-direction: column; gap: 20px; }
 
 /* Variante A: Titelkarte mit zartem Verlauf und Gitter */

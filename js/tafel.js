@@ -129,7 +129,7 @@
       el.innerHTML =
         '<div class="window__titlebar"><h2 class="window__title">' + T.icon(a.icon, 14) + '<span></span></h2>' +
         '<div class="window__tools"><div class="widget__werkzeug"></div>' +
-        '<div class="window__buttons" aria-hidden="true"><i></i><i></i><i></i></div></div></div>' +
+        '</div></div>' +
         '<div class="widget__inhalt"></div>' + ecken;
       zeigeName(el, w, a);
       // Ein-/Ausklappen: immer sichtbar, nicht nur am ausgewählten Widget
@@ -137,7 +137,7 @@
       klappe.type = "button";
       klappe.className = "widget__klappe";
       klappe.addEventListener("click", function () { w.zu = !w.zu; zeigeKlappe(el, w, klappe); T.speichere(); });
-      el.querySelector(".window__tools").insertBefore(klappe, el.querySelector(".window__buttons"));
+      el.querySelector(".window__tools").appendChild(klappe);
       zeigeStil(el, w);
     }
     tafel.appendChild(el);

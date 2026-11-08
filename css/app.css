@@ -163,14 +163,6 @@ button, label.btn { touch-action: manipulation; }   /* kein Doppeltipp-Zoom am i
 .widget__ecke[data-ecke="sw"] { left: -11px; bottom: -11px; cursor: nesw-resize; }
 .widget__ecke[data-ecke="se"] { right: -11px; bottom: -11px; cursor: nwse-resize; }
 
-/* Platzhalter bis zur jeweiligen Phase */
-.widget__inhalt .platzhalter {
-  margin: auto;
-  text-align: center;
-  font: 700 clamp(1rem, 10cqmin, 3rem)/1.2 var(--font-sans);
-  color: var(--text-muted);
-}
-
 /* ============================================================
    WIDGET-LEISTE (unten)
    ============================================================ */
@@ -231,8 +223,9 @@ button, label.btn { touch-action: manipulation; }   /* kein Doppeltipp-Zoom am i
 .dialog {
   padding: 0;
   color: var(--text);
-  width: min(620px, 92vw);
-  max-height: 90vh;
+  width: min(860px, 94vw);
+  max-height: 92vh;
+  max-height: 92dvh;   /* iPad: Höhe ohne die Leisten von Safari */
 }
 .dialog:not([open]) { display: none; }
 .dialog::backdrop { background: var(--veil); }
@@ -507,4 +500,68 @@ label.btn { cursor: pointer; }
 /* Eingeklappt: kompakt, nur Icon, Name und Knöpfe */
 .widget.is-zu { min-width: 0; max-width: 320px; box-shadow: var(--shadow-sm); }
 .widget.is-zu .window__titlebar { min-height: 0; padding: 4px 6px; }
-.widget.is-zu .window__buttons { display: none; }
+
+/* ============================================================
+   TO-DO – Aufgaben mit Farbstreifen, „gerade dran“ wie der aktive Kurs-Reiter
+   ============================================================ */
+.ablauf { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.ablauf__liste { flex: 1; min-height: 0; overflow: auto; gap: 10px; padding: 0 6px 6px 0; }
+.ablauf__leer { margin: auto; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; color: var(--text-muted); font-weight: 700; font-size: 1.1875rem; }
+.ablauf__leer p { margin: 0; }
+
+.ablauf__schritt, .ablauf__zeile { border-left: 10px solid var(--c-teal); }
+.ablauf__schritt { padding: 6px 10px 6px 0; gap: 10px; }
+[data-farbe="sage"].ablauf__schritt, [data-farbe="sage"].ablauf__zeile { border-left-color: var(--c-sage); }
+[data-farbe="sun"].ablauf__schritt, [data-farbe="sun"].ablauf__zeile { border-left-color: var(--c-sun); }
+[data-farbe="orange"].ablauf__schritt, [data-farbe="orange"].ablauf__zeile { border-left-color: var(--c-orange); }
+[data-farbe="coral"].ablauf__schritt, [data-farbe="coral"].ablauf__zeile { border-left-color: var(--c-coral); }
+[data-farbe="petrol"].ablauf__schritt, [data-farbe="petrol"].ablauf__zeile { border-left-color: var(--c-petrol-dark); }
+.ablauf__haken {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: var(--white);
+  border: var(--frame-width) solid var(--c-petrol-dark);
+  font: 700 1.5rem/1 var(--font-sans);
+  color: var(--text);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.ablauf__haken::before { content: ""; position: absolute; inset: -6px; }   /* größere Trefferfläche für Finger */
+.ablauf__haken { position: relative; }
+.ablauf__text {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  text-align: left;
+  font: 700 clamp(1.0625rem, 5cqw, 2rem)/1.25 var(--font-sans);
+  color: inherit;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.ablauf__schritt.is-jetzt { background: var(--active-bg); color: var(--active-text); box-shadow: 4px 4px 0 var(--active-accent); }
+.ablauf__schritt.is-fertig { background: var(--cream-deep); color: var(--text-muted); box-shadow: none; }
+.ablauf__schritt.is-fertig .ablauf__text { text-decoration: line-through; }
+.ablauf__haken:focus-visible, .ablauf__text:focus-visible, .ablauf__farbe:focus-visible { outline: 3px solid var(--mark); outline-offset: 2px; }
+
+/* Dialog „To-Do bearbeiten“: Feld, Farbkästchen, Knöpfe in einer Zeile (bricht um, wenn zu schmal) */
+.ablauf__bearbeiten { margin-bottom: 16px; gap: 10px; }
+.ablauf__zeile { flex-wrap: wrap; padding: 8px 10px; gap: 8px; }
+.ablauf__zeile .feld { flex: 1 1 200px; min-width: 0; width: auto; }
+.ablauf__farben { flex: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.ablauf__farbe { width: 40px; height: 40px; padding: 0; background: var(--c-teal); border: var(--frame-width) solid var(--white); outline: var(--hair) solid var(--line-color); cursor: pointer; touch-action: manipulation; }
+.ablauf__farbe[data-farbe="sage"] { background: var(--c-sage); }
+.ablauf__farbe[data-farbe="sun"] { background: var(--c-sun); }
+.ablauf__farbe[data-farbe="orange"] { background: var(--c-orange); }
+.ablauf__farbe[data-farbe="coral"] { background: var(--c-coral); }
+.ablauf__farbe[data-farbe="petrol"] { background: var(--c-petrol-dark); }
+/* gewählte Farbe: dicker dunkler Rahmen */
+.ablauf__farbe[aria-pressed="true"] { outline: 3px solid var(--c-petrol-dark); }

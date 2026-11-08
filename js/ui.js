@@ -19,7 +19,7 @@
       d.className = "dialog window";
       d.innerHTML =
         '<div class="window__titlebar"><h2 class="window__title">' + icon(o.icon || "info", 14) + '<span></span></h2>' +
-        '<div class="window__tools"><div class="window__buttons" aria-hidden="true"><i></i><i></i><i></i></div></div></div>' +
+        '<div class="window__tools"></div></div>' +
         '<form method="dialog" class="window__body"><div class="dialog__inhalt"></div><div class="dialog__knoepfe"></div></form>';
       d.querySelector(".window__title span").textContent = o.titel;
       var inhalt = d.querySelector(".dialog__inhalt");
