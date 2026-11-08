@@ -18,7 +18,7 @@ Die Tafel sieht aus wie ein freundlicher, alter Computer-Schreibtisch: cremefarb
 
 1. **Farben nur aus `tokens.css`.** Nirgends sonst stehen Farbcodes. Neue Farbe? In `tokens.css` anlegen und den Kontrast in `styleguide.html` prüfen.
 2. **Nur die Palette:** die zehn Palettenfarben, Weiß, die beiden Creme-Töne und Tönungen davon (Palettenfarbe mit Weiß gemischt). Einzige Mischfarbe: `--brown` (Koralle + Petrol-dunkel 50 : 50) für Text auf hellem Orange.
-3. **Scharfe Ecken**, kein `border-radius`.
+3. **Scharfe Ecken**, kein `border-radius`. Einzige Ausnahme: Gedanken- und Sprechblase im Text-Widget (auf ihren Wunsch rund).
 4. **Weiche Verläufe nur** in der Titelleiste (`.window__titlebar`) und im Hintergrund der Titelkarte (`.window--hero`).
 5. **Dünne Linien** (1–2 px) und **harter, versetzter Schatten** in Orange (`--shadow`), bei kleinen Teilen in Honig (`--shadow-sm`).
 6. **Pixel-Grafik bleibt scharf:** nur ganzzahlig vergrößern (2-fach, 3-fach …), immer mit `image-rendering: pixelated` (Klasse `.pixel`). Nie glätten, nie umfärben, nie mit Bild-KI neu erzeugen.
@@ -63,7 +63,10 @@ Regel: normaler Text mindestens 4,5 : 1, große oder fette Schrift (ab 24 px bzw
 | Petrol-dunkel | Sonne 40 % (Titelkarte) | 8,23 : 1 | ✔ |
 | Petrol-dunkel | Koralle 15 % (Titelkarte) | 8,72 : 1 | ✔ |
 | Petrol-dunkel | Orange 20 % | 8,76 : 1 | ✔ |
-| Petrol-dunkel | Sonne (Textmarker) | 6,03 : 1 | ✔ |
+| Petrol-dunkel | Sonne (Textmarker Gelb) | 6,03 : 1 | ✔ |
+| Petrol-dunkel | Teal 35 % (Textmarker Türkis) | 6,85 : 1 | ✔ |
+| Petrol-dunkel | Salbei 60 % (Textmarker Grün) | 6,11 : 1 | ✔ |
+| Petrol-dunkel | Koralle-hell 50 % (Textmarker Rosa) | 6,16 : 1 | ✔ |
 | Petrol-dunkel | Honig | 5,43 : 1 | ✔ |
 | Petrol-dunkel | Orange (Nummern-Block) | 4,89 : 1 | ✔ |
 | Petrol | Weiß | 5,62 : 1 | ✔ |
@@ -110,9 +113,9 @@ Alle Beispiele siehst du in `styleguide.html`. Dort kannst du den HTML-Code absc
 | `.window__body` | Innenfläche | Dialoge |
 | `.window--hero` | Titelkarte mit zartem Verlauf und Gitter | Stilvorlage |
 | `.chip`, `.chip--peach` | Tag-Chip (weiß) und Meta-Chip (helles Orange) | Namensliste im Zufall-Widget (antippen = fehlt heute) |
-| `mark` | Textmarker (untere Hälfte der Zeile in Sonne) | Text-Widget |
+| `mark` | Textmarker (untere Hälfte der Zeile in Sonne; `data-farbe` tuerkis, gruen, orange, rosa für die anderen Farben) | Text-Widget |
 | `.rows` / `.row` / `.row__icon` / `.row__num` | Listenzeilen mit Icon- oder Nummern-Block | Dialoge „Folien bearbeiten“ und „Nicht zusammen“, Aufgaben im To-Do (Farbstreifen links aus der Palette, „gerade dran“ Petrol-dunkel mit Korallen-Schatten) |
-| `.callout` | Hinweis-Kasten, gestrichelt | „Tippe unten auf ein Widget …“ |
+| `.callout` | Hinweis-Kasten, gestrichelt | „Tippe unten auf ein Widget …“; das Text-Widget als Infokasten sieht genauso aus |
 | `.btn`, `.btn--primary`, `.btn--sun`, `.btn--square`, `.btn--small` | Knöpfe (`.btn--sun`: sonnengelber zweiter Hauptknopf) | überall; `.btn--sun` bei „Einteilen“ im Zufall-Widget |
 | `.tab` | Reiter (aktiv: Petrol-dunkel mit Korallen-Rand) | Seiten im Zufall-Widget (Ziehen, Gruppen, Liste); die Kurs-Reiter nutzen `.reiter` mit demselben Aussehen |
 | `.choice` | Auswahl als Knopfreihe (Radio-Knöpfe) | Einstellungen, Lehrer:in-Auswahl |
@@ -132,6 +135,24 @@ Das Titelschild bleibt auf jeder Titelleiste cremefarben, der Text darin ist als
 Jedes Fenster hat in der Titelleiste einen Knopf − / + (`.widget__klappe`). Eingeklappt (`.is-zu`) ist nur eine schmale Leiste mit Icon, Name und + zu sehen (höchstens 320 px breit, kleiner Schatten). Größe und Inhalt bleiben gespeichert.
 
 Über den Stift-Knopf bekommt jedes Fenster einen eigenen Namen (`w.name`, höchstens 30 Zeichen), damit man eingeklappte Fenster unterscheiden kann. Leer = Standardtitel. Widgets, die ihren Titel selbst wechseln (Timer/Stoppuhr), setzen `span.dataset.standard` und überschreiben einen eigenen Namen nicht.
+
+### Formen des Text-Widgets
+
+Im Zahnrad wählst du die Form (`daten.form`). „Fenster“ ist das normale Widget. Die anderen drei stehen **frei** auf der Tafel, ohne Titelleiste, wie die Lehrer:in-Figur (`art.frei` ist beim Text-Widget eine Funktion der Daten).
+
+| Form | Aussehen |
+|---|---|
+| Gedankenblase | weiß, Rahmen Petrol-dunkel, stark gerundet, zwei kleine Kreise als Zipfel |
+| Sprechblase | weiß, Rahmen Petrol-dunkel, gerundet, dreieckiger Zipfel |
+| Infokasten | wie `.callout`: Teal 8 %, gestrichelter Rahmen in Teal |
+
+Der Zipfel der Blasen (`daten.zipfel`) zeigt nach unten links, unten rechts, oben links, oben rechts, links oder rechts. Zum Verschieben fasst man die Blase am Rand an, innen wird geschrieben.
+
+## 4b. App fürs iPad
+
+- `manifest.webmanifest`: Name „Tafel“, Hintergrund und Leiste in `--cream`.
+- App-Symbol: Pixelkarte `app` in `tools/pixel-motive.mjs` (16 × 16: Fenster mit bunter Titelleiste und To-Do-Zeilen, oranger Schatten, Creme-Hintergrund). Das Werkzeug schreibt `assets/app/app-180.png` (iPad), `app-192.png` und `app-512.png`, immer ganzzahlig vergrößert.
+- `sw.js` merkt sich die Dateien der Seite, damit sie ohne Internet startet. Nur Dateien dieser Seite.
 
 ---
 

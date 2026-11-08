@@ -10,7 +10,7 @@ Die Besitzerin ist Lehrerin, keine Programmiererin. Sie möchte, dass Schritte i
 ## Design (v2 „Retro-Fenster“)
 - Design-Regeln, Palette und Kontrast-Tabelle stehen in `DESIGN.md`, alle Bausteine zum Anschauen in `styleguide.html`.
 - **Farben nur aus `css/tokens.css`.** Nur die zehn Palettenfarben, Weiß, `--cream`, `--cream-deep` und Tönungen davon (mit Weiß gemischt, als benannte Variable). Keine freien Farbcodes im Code. Neue Farbe dort anlegen und den Kontrast prüfen (Text mindestens 4,5 : 1, große/fette Schrift 3 : 1). Weiße Schrift nur auf Petrol-dunkel und Petrol.
-- Scharfe Ecken, kein `border-radius`. Weiche Verläufe nur in der Titelleiste (`.window__titlebar`) und im Hintergrund der Titelkarte (`.window--hero`).
+- Scharfe Ecken, kein `border-radius`. Ausnahme: Gedanken- und Sprechblase im Text-Widget dürfen rund sein (ihr Wunsch). Weiche Verläufe nur in der Titelleiste (`.window__titlebar`) und im Hintergrund der Titelkarte (`.window--hero`).
 - Dünne Linien und harter, versetzter Schatten in Orange bzw. Honig.
 - Bausteine mit allgemeinen Namen in `css/components.css` (`.window`, `.chip`, `.row`, `.callout`, `.btn` …), nichts doppelt.
 - Schriften nur lokal aus `assets/fonts/` (Source Sans 3, JetBrains Mono).
@@ -24,7 +24,7 @@ Die Besitzerin ist Lehrerin, keine Programmiererin. Sie möchte, dass Schritte i
 ## Inhalt und Sprache
 - Texte auf Deutsch, du-Ansprache, freundlich und gern mit einem Augenzwinkern.
 - Keine privaten Daten auf die Seite (keine Namen von Schülerinnen und Schülern, Adressen, Telefonnummern). Das Repository ist öffentlich.
-- Texte aus dem Text-Widget werden beim Laden und Speichern gesäubert (nur b, mark, ul, ol, li, br, div, p). Bilder werden nur als `data:image/…` angezeigt (`T.istBild`). Diese Prüfungen nicht entfernen: Sicherungsdateien können von außen kommen.
+- Texte aus dem Text-Widget werden beim Laden und Speichern gesäubert (nur b, i, u, mark mit erlaubter `data-farbe`, span mit erlaubter `data-groesse`, ul, ol, li, br, div, p). Bilder werden nur als `data:image/…` angezeigt (`T.istBild`). Diese Prüfungen nicht entfernen: Sicherungsdateien können von außen kommen.
 - Die Namensliste im Zufall-Widget (`kurs.schueler`, dazu die „Nicht zusammen“-Paare in `kurs.trennen`) enthält nur Pseudonyme, die sie selbst einträgt. Sie liegt nur im Browser (localStorage) und in der Sicherungsdatei, nie im Repository. Keine Beispielnamen von echten Kindern in Code, Tests oder Screenshots.
 
 ## Barrierefreiheit
@@ -35,5 +35,6 @@ Die Besitzerin ist Lehrerin, keine Programmiererin. Sie möchte, dass Schritte i
 ## Ablauf
 - Vor größeren Änderungen kurz den Plan nennen.
 - Screenshots in iPad-quer-Breite (1180 px) und Laptop-Breite (1366 px) zeigen. Handybreite ist nicht nötig.
-- Bei Änderungen an CSS oder JS die Versionsnummer `?v=…` in `index.html` hochzählen.
+- Bei Änderungen an CSS oder JS die Versionsnummer `?v=…` in `index.html` hochzählen. Der Offline-Speicher (`sw.js`) lädt die neue Fassung dann im Hintergrund, sie ist beim nächsten Öffnen da.
+- `sw.js` darf nur Dateien derselben Adresse merken, nie fremde Server.
 - **Erst nach ihrem Okay pushen** und vorher die geänderten Dateien nennen.

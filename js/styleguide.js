@@ -9,7 +9,7 @@
   var FARBEN = ["--c-petrol-dark", "--c-petrol", "--c-teal", "--c-sage", "--c-sun", "--c-honey", "--c-orange", "--c-orange-deep",
     "--c-coral", "--c-coral-soft", "--white", "--cream", "--cream-deep", "--brown",
     "--tint-teal-8", "--tint-teal-10", "--tint-teal-20", "--tint-teal-35", "--tint-sun-40", "--tint-coral-soft-15",
-    "--tint-orange-20", "--tint-orange-40", "--tint-petrol-dark-6", "--tint-petrol-dark-12", "--tint-sage-20"];
+    "--tint-orange-20", "--tint-orange-40", "--tint-petrol-dark-6", "--tint-petrol-dark-12", "--tint-sage-20", "--tint-sage-60", "--tint-coral-soft-50"];
   var ROLLEN = { "--text": "Haupttext", "--text-muted": "gedämpfter Text", "--line-color": "dünne Rahmen", "--shadow-color": "Schatten",
     "--shadow-small": "kleiner Schatten", "--mark": "Textmarker", "--focus": "Fokus", "--active-bg": "aktiv", "--active-accent": "aktiv, Rand", "--grid-line": "Seitengitter" };
   var tafel = document.getElementById("sg-farben");
@@ -53,6 +53,7 @@
     ["--c-petrol-dark", "--tint-teal-8", 4.5], ["--c-petrol-dark", "--tint-teal-10", 4.5], ["--c-petrol-dark", "--tint-sun-40", 4.5],
     ["--c-petrol-dark", "--tint-coral-soft-15", 4.5], ["--c-petrol-dark", "--tint-orange-20", 4.5], ["--c-petrol-dark", "--c-sun", 4.5],
     ["--c-petrol-dark", "--c-orange", 4.5], ["--c-petrol-dark", "--c-honey", 4.5],
+    ["--c-petrol-dark", "--tint-teal-35", 4.5], ["--c-petrol-dark", "--tint-sage-60", 4.5], ["--c-petrol-dark", "--tint-coral-soft-50", 4.5],
     ["--c-petrol", "--white", 4.5], ["--c-petrol", "--cream", 4.5], ["--c-petrol", "--cream-deep", 4.5], ["--c-petrol", "--tint-teal-8", 4.5],
     ["--c-petrol", "--tint-sun-40", 4.5], ["--c-petrol", "--tint-orange-20", 4.5],
     ["--brown", "--tint-orange-20", 4.5], ["--brown", "--white", 4.5],

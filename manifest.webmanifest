@@ -1,0 +1,16 @@
+{
+  "name": "Klassenzimmer-Tafel",
+  "short_name": "Tafel",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FCF6E9",
+  "theme_color": "#FCF6E9",
+  "icons": [
+    { "src": "assets/app/app-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/app/app-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/app/app-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

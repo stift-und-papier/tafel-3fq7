@@ -497,9 +497,9 @@ label.btn { cursor: pointer; }
 
 /* Markerfarben (ohne Angabe: Gelb aus --mark) und Größen für markierten Text */
 mark[data-farbe="tuerkis"] { background: linear-gradient(transparent 55%, var(--tint-teal-35) 55%); }
-mark[data-farbe="gruen"] { background: linear-gradient(transparent 55%, var(--c-sage) 55%); }
+mark[data-farbe="gruen"] { background: linear-gradient(transparent 55%, var(--tint-sage-60) 55%); }
 mark[data-farbe="orange"] { background: linear-gradient(transparent 55%, var(--c-orange) 55%); }
-mark[data-farbe="rosa"] { background: linear-gradient(transparent 55%, var(--c-coral-soft) 55%); }
+mark[data-farbe="rosa"] { background: linear-gradient(transparent 55%, var(--tint-coral-soft-50) 55%); }
 .text__feld span[data-groesse="klein"] { font-size: .7em; }
 .text__feld span[data-groesse="gross"] { font-size: 1.5em; }
 .text__feld span[data-groesse="riesig"] { font-size: 2.2em; line-height: 1.15; }

@@ -39,6 +39,8 @@
   --tint-petrol-dark-6:  #F2F4F5;
   --tint-petrol-dark-12: #E5E9EA;
   --tint-sage-20:        #E8EFE5;
+  --tint-sage-60:        #B9D0B1;   /* Textmarker Grün */
+  --tint-coral-soft-50:  #F4BEB0;   /* Textmarker Rosa */
   /* Einzige Mischfarbe: Koralle + Petrol-dunkel 50 : 50 – Text auf hellem Orange */
   --brown: #875B52;
   /* Abdunklung hinter Dialogen: Petrol-dunkel, halb durchsichtig */

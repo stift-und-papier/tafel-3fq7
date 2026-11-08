@@ -106,4 +106,13 @@
   T.zeigeReiter();
   T.zeigeTafel();
   erinnerung();
+
+  // ---------- Offline-Speicher (sw.js): nur über http(s), nicht beim Öffnen per Doppelklick ----------
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+    navigator.serviceWorker.register("sw.js").then(function () { return navigator.serviceWorker.ready; }).then(function (reg) {
+      // alles, was diese Seite schon geladen hat, auch für den Start ohne Internet merken
+      var dateien = performance.getEntriesByType("resource").map(function (r) { return r.name; }).concat(location.href.split("#")[0]);
+      reg.active.postMessage({ art: "merken", dateien: dateien });
+    }).catch(function () {});
+  }
 })();

@@ -1,8 +1,10 @@
 // Baut die Pixel-Motive dieses Projekts aus Pixelkarten.
 // Jede Zeile ist eine Pixelreihe, jeder Buchstabe ein Pixel in einer Farbe aus FARBE, "." = durchsichtig.
 // Aufruf (nur nötig, wenn du ein Motiv änderst oder neu zeichnest):  node tools/pixel-motive.mjs
-// Ergebnis: assets/deko/<name>.svg (Originalgröße) und assets/icons/<name>.svg (in einem 14×14-Feld).
-import { writeFileSync } from "node:fs";
+// Ergebnis: assets/deko/<name>.svg (Originalgröße), assets/icons/<name>.svg (in einem 14×14-Feld)
+// und das App-Symbol assets/app/app-<größe>.png (ganzzahlig vergrößert, fürs iPad und den Browser).
+import { writeFileSync, mkdirSync } from "node:fs";
+import { deflateSync } from "node:zlib";
 
 // Farben aus css/tokens.css (Design v2) – Buchstaben bleiben, damit alle Karten weiter passen
 const FARBE = {
@@ -19,7 +21,8 @@ const FARBE = {
   l: "#B4DDD8", // --tint-teal-35
   r: "#E97C61", // --c-coral-soft
   t: "#E76F51", // --c-coral
-  m: "#EFB366"  // --c-honey
+  m: "#EFB366", // --c-honey
+  C: "#FCF6E9"  // --cream
 };
 
 // --- Hilfen für runde Formen: Füllung berechnen, Kontur automatisch ---
@@ -48,6 +51,25 @@ const pfeilRechts = [
   ".....K....."];
 
 const KARTEN = {
+  // ---------- App-Symbol (Home-Bildschirm): Fenster mit To-Do-Zeilen, Hintergrund Creme ----------
+  app: [
+    "CCCCCCCCCCCCCCCC",
+    "CKKKKKKKKKKKKKCC",
+    "CKbbssyyyoottKCC",
+    "CKbbssyyyoottKoC",
+    "CKKKKKKKKKKKKKoC",
+    "CKwwwwwwwwwwwKoC",
+    "CKwttwgggggwwKoC",
+    "CKwttwwwwwwwwKoC",
+    "CKwwwwwwwwwwwKoC",
+    "CKwyywggggwwwKoC",
+    "CKwyywwwwwwwwKoC",
+    "CKwwwwwwwwwwwKoC",
+    "CKwbbwggggggwKoC",
+    "CKKKKKKKKKKKKKoC",
+    "CCoooooooooooooC",
+    "CCCCCCCCCCCCCCCC"],
+
   // ---------- Sprites neben der Lehrer:in-Figur ----------
   ausrufe: [".KKK.","KyyyK","KyyyK","KyyyK","KyyyK","KyyyK",".KyK.",".KyK.","..K..",".....",".KKK.","KyyyK","KyyyK",".KKK."],
   frage: ["..KKKKK..",".KbbbbbK.","KbbKKKbbK","KbK...KbK",".K....KbK",".....KbbK","....KbbK.","...KbbK..","...KbK...","....K....","...KKK...","...KbK...","...KKK..."],
@@ -315,7 +337,7 @@ const ICONS = ["sonne-auf", "sonne", "mond", "wecker", "herz", "info", "verbot",
   "wuerfel", "bild", "text", "uhr", "kalender", "folien", "muell", "stift", "start", "pause", "stopp", "vollbild", "pfeil-links", "pfeil-rechts", "kreuz", "speichern", "laden"];
 
 // Prüfen: alle Zeilen gleich lang, nur bekannte Farben
-for (const n of new Set([...DEKO, ...ICONS])) {
+for (const n of new Set([...DEKO, ...ICONS, "app"])) {
   const z = KARTEN[n];
   if (!z) throw new Error("Motiv fehlt: " + n);
   if (z.some((s) => s.length !== z[0].length)) throw new Error(n + ": Zeilen ungleich lang");
@@ -349,4 +371,27 @@ function svgDatei(z, feld) {
 
 for (const n of DEKO) writeFileSync("assets/deko/" + n + ".svg", svgDatei(KARTEN[n]));
 for (const n of ICONS) writeFileSync("assets/icons/" + n + ".svg", svgDatei(KARTEN[n], 14));
-console.log("Fertig:", DEKO.length, "Deko-Motive,", ICONS.length, "Icons");
+// PNG ohne Zusatzprogramm: jedes Kartenpixel wird zu einem Quadrat aus „mal“ Pixeln, Rand in Randfarbe
+function pngDatei(z, groesse, rand) {
+  const mal = Math.floor(groesse / z[0].length), ox = Math.floor((groesse - z[0].length * mal) / 2);
+  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const zeile = groesse * 3 + 1, roh = Buffer.alloc(zeile * groesse);
+  for (let y = 0; y < groesse; y++) for (let x = 0; x < groesse; x++) {
+    const px = Math.floor((x - ox) / mal), py = Math.floor((y - ox) / mal);
+    const f = x < ox || y < ox || px >= z[0].length || py >= z.length ? rand : z[py][px];
+    hex(FARBE[f]).forEach((v, i) => { roh[y * zeile + 1 + x * 3 + i] = v; });
+  }
+  const tab = Array.from({ length: 256 }, (_, n) => { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; return c >>> 0; });
+  const crc = (b) => { let c = 0xFFFFFFFF; for (const x of b) c = tab[(c ^ x) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+  const stueck = (typ, daten) => {
+    const td = Buffer.concat([Buffer.from(typ), daten]), l = Buffer.alloc(4), c = Buffer.alloc(4);
+    l.writeUInt32BE(daten.length); c.writeUInt32BE(crc(td));
+    return Buffer.concat([l, td, c]);
+  };
+  const kopf = Buffer.alloc(13);
+  kopf.writeUInt32BE(groesse); kopf.writeUInt32BE(groesse, 4); kopf[8] = 8; kopf[9] = 2;   // 8 Bit, RGB
+  return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), stueck("IHDR", kopf), stueck("IDAT", deflateSync(roh)), stueck("IEND", Buffer.alloc(0))]);
+}
+mkdirSync("assets/app", { recursive: true });
+for (const g of [180, 192, 512]) writeFileSync("assets/app/app-" + g + ".png", pngDatei(KARTEN.app, g, "C"));
+console.log("Fertig:", DEKO.length, "Deko-Motive,", ICONS.length, "Icons, App-Symbol in 3 Größen");
