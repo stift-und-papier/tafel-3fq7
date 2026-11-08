@@ -22,6 +22,12 @@
     if (!z || z.version !== 1 || !Array.isArray(z.kurse) || !z.kurse.length) return false;
     return z.kurse.every(function (k) {
       return k && typeof k.id === "string" && typeof k.name === "string" && Array.isArray(k.widgets) &&
+        (k.schueler === undefined || Array.isArray(k.schueler) && k.schueler.every(function (s) {
+          return s && typeof s.id === "string" && typeof s.name === "string";
+        })) &&
+        (k.trennen === undefined || Array.isArray(k.trennen) && k.trennen.every(function (p) {
+          return Array.isArray(p) && p.length === 2 && typeof p[0] === "string" && typeof p[1] === "string";
+        })) &&
         k.widgets.every(function (w) {
           return w && typeof w.id === "string" && typeof w.typ === "string" &&
             [w.x, w.y, w.b, w.h].every(Number.isFinite) && typeof w.daten === "object" && w.daten !== null;

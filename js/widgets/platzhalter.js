@@ -6,7 +6,6 @@
   "use strict";
   var T = window.Tafel;
   [
-    ["zufall", "Zufall", "wuerfel", 3, 560, 440],
     ["bild", "Bild", "bild", 4, 480, 360],
     ["text", "Text", "text", 4, 480, 280],
     ["stundenplan", "Stundenplan", "kalender", 5, 720, 480],

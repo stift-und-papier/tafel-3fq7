@@ -74,7 +74,7 @@
   }
 
   function loesche(k) {
-    T.frage("Kurs löschen?", "„" + k.name + "“ wird mit allen Widgets gelöscht. Das lässt sich nicht rückgängig machen.",
+    T.frage("Kurs löschen?", "„" + k.name + "“ wird mit allen Widgets und der Namensliste gelöscht. Das lässt sich nicht rückgängig machen.",
       "Ja, löschen").then(function (ja) {
       if (!ja) return;
       var kurse = T.zustand.kurse, i = kurse.indexOf(k);

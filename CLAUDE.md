@@ -23,6 +23,7 @@ Die Besitzerin ist Lehrerin, keine Programmiererin. Sie möchte, dass Schritte i
 ## Inhalt und Sprache
 - Texte auf Deutsch, du-Ansprache, freundlich und gern mit einem Augenzwinkern.
 - Keine privaten Daten auf die Seite (keine Namen von Schülerinnen und Schülern, Adressen, Telefonnummern). Das Repository ist öffentlich.
+- Die Namensliste im Zufall-Widget (`kurs.schueler`, dazu die „Nicht zusammen“-Paare in `kurs.trennen`) enthält nur Pseudonyme, die sie selbst einträgt. Sie liegt nur im Browser (localStorage) und in der Sicherungsdatei, nie im Repository. Keine Beispielnamen von echten Kindern in Code, Tests oder Screenshots.
 
 ## Barrierefreiheit
 - Kurs-Reiter per Tastatur bedienbar halten (Pfeiltasten, Pos1, Ende). Sichtbarer Fokus.

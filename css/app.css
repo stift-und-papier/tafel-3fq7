@@ -350,3 +350,64 @@ label.btn { cursor: pointer; }
 .lehrerin__auswahl legend { grid-column: 1 / -1; }
 .lehrerin__auswahl span { flex-direction: column; justify-content: center; gap: 6px; width: 100%; padding: 10px 6px; font-size: 1rem; }
 .lehrerin__auswahl img { width: 84px; height: 160px; }
+
+/* ============================================================
+   ZUFALL – Ziehen, Gruppen, Namensliste
+   ============================================================ */
+.zufall { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+.zufall__reiter { flex: none; }
+.zufall__seite { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+.zufall__seite[hidden] { display: none; }
+.zufall__fuss { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.zufall__fuss > .label { margin-right: auto; }
+.zufall .choice legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* gezogener Name: so groß, wie das Widget erlaubt */
+.zufall__name {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font: 800 min(24cqh, 12cqw)/1.05 var(--font-sans);
+  letter-spacing: -.02em;
+  overflow-wrap: anywhere;
+}
+.zufall__name.rollt { color: var(--text-muted); }
+.zufall__name.is-hinweis, .zufall__leer { font: 700 clamp(1rem, 4cqw, 1.5rem)/1.3 var(--font-sans); letter-spacing: 0; color: var(--text-muted); }
+.zufall__leer { margin: auto; text-align: center; grid-column: 1 / -1; }
+
+.zufall__schritt { display: flex; align-items: center; gap: 6px; }
+.zufall__schritt + .btn { margin-left: auto; }
+.zufall__zahl { min-width: 2.5ch; text-align: center; font: 700 1.5rem/1 var(--font-mono); }
+.zufall__gruppen {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  align-content: start;
+  gap: 12px;
+  padding: 0 4px 4px 0;   /* Platz für den Schatten */
+}
+.zufall__gruppe { padding: 8px 12px; background: var(--white); border: var(--hair) solid var(--line-color); box-shadow: 3px 3px 0 var(--tint-teal-20); }
+.zufall__gruppe h3 { margin: 0 0 4px; }
+.zufall__gruppe ul { margin: 0; padding: 0; list-style: none; font: 700 clamp(1rem, 3cqw, 1.75rem)/1.3 var(--font-sans); }
+
+/* Namensliste: Chips zum Antippen, „fehlt heute“ gestrichelt und durchgestrichen */
+.zufall__namen { flex: 1; min-height: 0; overflow: auto; align-content: flex-start; }
+.zufall__namen .chip { min-height: 44px; cursor: pointer; font: 700 1.0625rem/1.2 var(--font-sans); text-transform: none; letter-spacing: 0; color: var(--text); }
+.zufall__namen .chip:hover { background: var(--tint-orange-20); }
+.zufall__namen .chip[aria-pressed="true"] { background: var(--cream-deep); border-style: dashed; color: var(--text-muted); text-decoration: line-through; }
+
+.feld--text { min-height: 280px; padding: 10px 12px; line-height: 1.4; resize: vertical; }
+.dialog__hinweis { margin: 12px 0 0; font-size: 1rem; color: var(--text-muted); }
+
+/* Dialog „Nicht zusammen“: Paare als Zeilen, darunter zwei Auswahlfelder */
+.zufall__paare { margin-bottom: 16px; }
+.zufall__paare .row { padding: 8px 12px; }
+.zufall__paare .btn { margin-left: auto; }
+.zufall__paar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.zufall__paar .feld { flex: 1 1 160px; width: auto; }
+.zufall__paar .feld-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

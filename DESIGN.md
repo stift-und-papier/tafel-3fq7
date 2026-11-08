@@ -109,12 +109,12 @@ Alle Beispiele siehst du in `styleguide.html`. Dort kannst du den HTML-Code absc
 | `.window__titlebar`, `.window__title`, `.window__tools`, `.window__buttons` | Titelleiste mit Verlauf, Titel-Schild mit Icon, Werkzeug und drei Deko-Knöpfen | Kopf jedes Widgets |
 | `.window__body` | Innenfläche | Dialoge |
 | `.window--hero` | Titelkarte mit zartem Verlauf und Gitter | Stilvorlage |
-| `.chip`, `.chip--peach` | Tag-Chip (weiß) und Meta-Chip (helles Orange) | später z. B. Gruppen, Folien |
+| `.chip`, `.chip--peach` | Tag-Chip (weiß) und Meta-Chip (helles Orange) | Namensliste im Zufall-Widget (antippen = fehlt heute); später Folien |
 | `mark` | Textmarker (untere Hälfte der Zeile in Sonne) | Text-Widget |
 | `.rows` / `.row` / `.row__icon` / `.row__num` | Listenzeilen mit Icon- oder Nummern-Block | später Schülerliste, Gruppen |
 | `.callout` | Hinweis-Kasten, gestrichelt | „Tippe unten auf ein Widget …“ |
-| `.btn`, `.btn--primary`, `.btn--square`, `.btn--small` | Knöpfe | überall |
-| `.tab` | Reiter (aktiv: Petrol-dunkel mit Korallen-Rand) | Stilvorlage; die Kurs-Reiter nutzen `.reiter` mit demselben Aussehen |
+| `.btn`, `.btn--primary`, `.btn--sun`, `.btn--square`, `.btn--small` | Knöpfe (`.btn--sun`: sonnengelber zweiter Hauptknopf) | überall; `.btn--sun` bei „Einteilen“ im Zufall-Widget |
+| `.tab` | Reiter (aktiv: Petrol-dunkel mit Korallen-Rand) | Seiten im Zufall-Widget (Ziehen, Gruppen, Liste); die Kurs-Reiter nutzen `.reiter` mit demselben Aussehen |
 | `.choice` | Auswahl als Knopfreihe (Radio-Knöpfe) | Einstellungen, Lehrer:in-Auswahl |
 | `.teacher-overlap`, `.sprite` | Figur, die über den Kartenrand ragt, und kleine Sprites | Stilvorlage |
 
