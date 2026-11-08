@@ -57,16 +57,20 @@
   };
 
   var vollGemeldet = false;
-  T.speichere = function () {
+  // → true, wenn gespeichert. leise = keine eigene Meldung (der Aufrufer meldet selbst, z. B. bei Bildern)
+  T.speichere = function (leise) {
     try {
       localStorage.setItem(SCHLUESSEL, JSON.stringify(T.zustand));
       document.dispatchEvent(new CustomEvent("tafel:gespeichert"));
+      return true;
     } catch (e) {
+      if (leise === true) return false;
       if (!vollGemeldet && T.dialog) {
         vollGemeldet = true;
         T.dialog({ titel: "Speicher voll", icon: "verbot",
           inhalt: "Der Browser-Speicher ist voll, deine letzte Änderung wurde nicht gespeichert. Speichere eine Sicherung und lösche ein paar Bilder oder Widgets." });
       }
+      return false;
     }
   };
 

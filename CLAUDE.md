@@ -19,10 +19,12 @@ Die Besitzerin ist Lehrerin, keine Programmiererin. Sie möchte, dass Schritte i
 - Bilder nur ganzzahlig skalieren, mit `image-rendering: pixelated`. Nie glätten, nie hochrechnen, nie LANCZOS, BICUBIC oder BILINEAR. Kein `rotate()` auf Pixelgrafik.
 - **Keine Bild-KI.** Neue Motive nur als Pixelkarte in `tools/pixel-motive.mjs` zeichnen und erzeugen. Vorher stark vergrößert zeigen und auf ein Okay warten.
 - Die Lehrer:in-Figur nicht neu zeichnen und nicht umfärben. Sie behält ihre eigenen Farben.
+- Ausnahme: Fotos und Bilder, die sie selbst ins Bild- oder Folien-Widget lädt, dürfen glatt skaliert werden. Sie werden beim Laden auf höchstens 1600 px verkleinert (`T.bilderWaehlen` in `js/ui.js`), weil der Browser-Speicher nur etwa 5 MB fasst.
 
 ## Inhalt und Sprache
 - Texte auf Deutsch, du-Ansprache, freundlich und gern mit einem Augenzwinkern.
 - Keine privaten Daten auf die Seite (keine Namen von Schülerinnen und Schülern, Adressen, Telefonnummern). Das Repository ist öffentlich.
+- Texte aus dem Text-Widget werden beim Laden und Speichern gesäubert (nur b, mark, ul, ol, li, br, div, p). Bilder werden nur als `data:image/…` angezeigt (`T.istBild`). Diese Prüfungen nicht entfernen: Sicherungsdateien können von außen kommen.
 - Die Namensliste im Zufall-Widget (`kurs.schueler`, dazu die „Nicht zusammen“-Paare in `kurs.trennen`) enthält nur Pseudonyme, die sie selbst einträgt. Sie liegt nur im Browser (localStorage) und in der Sicherungsdatei, nie im Repository. Keine Beispielnamen von echten Kindern in Code, Tests oder Screenshots.
 
 ## Barrierefreiheit

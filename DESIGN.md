@@ -104,19 +104,34 @@ Alle Beispiele siehst du in `styleguide.html`. Dort kannst du den HTML-Code absc
 
 | Klasse | Was | Wo in der Tafel |
 |---|---|---|
-| `.header-strip` + `.label` + `.counter` | Kopfzeile: Label links, Zähler „01 / 08“ rechts | Label mit dem Kursnamen ganz oben; Zähler später im Folien-Widget |
+| `.header-strip` + `.label` + `.counter` | Kopfzeile: Label links, Zähler „01 / 08“ rechts | Label mit dem Kursnamen ganz oben; Zähler unten im Folien-Widget |
 | `.window` | Fenster-Karte: weiß, dünner Rahmen, oranger Schatten | jedes Widget, jeder Dialog |
 | `.window__titlebar`, `.window__title`, `.window__tools`, `.window__buttons` | Titelleiste mit Verlauf, Titel-Schild mit Icon, Werkzeug und drei Deko-Knöpfen | Kopf jedes Widgets |
 | `.window__body` | Innenfläche | Dialoge |
 | `.window--hero` | Titelkarte mit zartem Verlauf und Gitter | Stilvorlage |
-| `.chip`, `.chip--peach` | Tag-Chip (weiß) und Meta-Chip (helles Orange) | Namensliste im Zufall-Widget (antippen = fehlt heute); später Folien |
+| `.chip`, `.chip--peach` | Tag-Chip (weiß) und Meta-Chip (helles Orange) | Namensliste im Zufall-Widget (antippen = fehlt heute) |
 | `mark` | Textmarker (untere Hälfte der Zeile in Sonne) | Text-Widget |
-| `.rows` / `.row` / `.row__icon` / `.row__num` | Listenzeilen mit Icon- oder Nummern-Block | später Schülerliste, Gruppen |
+| `.rows` / `.row` / `.row__icon` / `.row__num` | Listenzeilen mit Icon- oder Nummern-Block | Dialoge „Folien bearbeiten“ und „Nicht zusammen“ |
 | `.callout` | Hinweis-Kasten, gestrichelt | „Tippe unten auf ein Widget …“ |
 | `.btn`, `.btn--primary`, `.btn--sun`, `.btn--square`, `.btn--small` | Knöpfe (`.btn--sun`: sonnengelber zweiter Hauptknopf) | überall; `.btn--sun` bei „Einteilen“ im Zufall-Widget |
 | `.tab` | Reiter (aktiv: Petrol-dunkel mit Korallen-Rand) | Seiten im Zufall-Widget (Ziehen, Gruppen, Liste); die Kurs-Reiter nutzen `.reiter` mit demselben Aussehen |
 | `.choice` | Auswahl als Knopfreihe (Radio-Knöpfe) | Einstellungen, Lehrer:in-Auswahl |
 | `.teacher-overlap`, `.sprite` | Figur, die über den Kartenrand ragt, und kleine Sprites | Stilvorlage |
+
+### Fenster-Stile und Einklappen
+
+Bild, Text und Folien lassen sich über den Stift-Knopf einfärben, damit man sie auf der Tafel unterscheiden kann. Gespeichert wird das am Widget (`kopf`, `koerper`), die Regeln stehen in `css/app.css`.
+
+| Teil | Stil 1 (Standard) | Stil 2 | Stil 3 |
+|---|---|---|---|
+| Titelleiste (`data-kopf`) | Verlauf `--titlebar` | Petrol-dunkel `--c-petrol-dark` | Sonne `--c-sun` |
+| Fensterkörper (`data-koerper`) | Weiß `--white` | Mint `--tint-teal-8` | Pfirsich `--tint-orange-20` |
+
+Das Titelschild bleibt auf jeder Titelleiste cremefarben, der Text darin ist also immer gut lesbar. Petrol-dunkel auf Mint und auf Pfirsich ist in der Kontrast-Tabelle geprüft.
+
+Jedes Fenster hat in der Titelleiste einen Knopf − / + (`.widget__klappe`). Eingeklappt (`.is-zu`) ist nur eine schmale Leiste mit Icon, Name und + zu sehen (höchstens 320 px breit, kleiner Schatten). Größe und Inhalt bleiben gespeichert.
+
+Über den Stift-Knopf bekommt jedes Fenster einen eigenen Namen (`w.name`, höchstens 30 Zeichen), damit man eingeklappte Fenster unterscheiden kann. Leer = Standardtitel. Widgets, die ihren Titel selbst wechseln (Timer/Stoppuhr), setzen `span.dataset.standard` und überschreiben einen eigenen Namen nicht.
 
 ---
 

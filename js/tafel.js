@@ -4,9 +4,11 @@
    Größe: an den vier Ecken ziehen. Auswahl zeigt Ecken und Werkzeugleiste.
 
    Ein Widget-Typ meldet sich mit Tafel.registriere(typ, art) an:
-   art = { titel, icon, frei?, vorher()?, groesse: {b, h}, min: {b, h},
+   art = { titel, icon, frei?, farbwahl?, vorher()?, groesse: {b, h}, min: {b, h},
            erstelle(inhaltEl, daten, speichere) → optional { entferne(), einstellungen() } }
    „daten“ ist das gespeicherte Objekt des Widgets: ändern, dann speichere() aufrufen.
+   Stift-Knopf: eigener Fenstername (w.name), bei farbwahl auch Titelleiste und Fensterkörper (je 3 Stile, w.kopf / w.koerper).
+   Jedes Fenster lässt sich mit − / + einklappen (w.zu), dann ist nur die Titelleiste zu sehen.
    ============================================================ */
 (function () {
   "use strict";
@@ -46,8 +48,68 @@
     var l = passeEin(w);
     el.style.left = l.x + "px";
     el.style.top = l.y + "px";
-    el.style.width = l.b + "px";
-    el.style.height = l.h + "px";
+    // eingeklappt: nur die Titelleiste, so schmal wie Name und Knöpfe
+    el.style.width = w.zu ? "auto" : l.b + "px";
+    el.style.height = w.zu ? "auto" : l.h + "px";
+  }
+
+  // Eigener Fenstername (w.name), sonst der Standardtitel. Widgets wie der Timer setzen
+  // ihren Standardtitel über span.dataset.standard, damit ein eigener Name bleibt.
+  function zeigeName(el, w, a) {
+    var span = el.querySelector(".window__title span");
+    var name = typeof w.name === "string" && w.name.trim() ? w.name.trim().slice(0, 30) : "";
+    if (name) span.dataset.eigen = "1"; else delete span.dataset.eigen;
+    span.textContent = name || span.dataset.standard || a.titel;
+    el.setAttribute("aria-label", span.textContent);
+  }
+
+  // Fenster-Stile: Titelleiste und Fensterkörper je drei Stile (nur Widgets mit art.farbwahl).
+  // Gespeichert am Widget (w.kopf, w.koerper); unbekannte Werte → erster Stil.
+  var KOPF = [["verlauf", "Verlauf"], ["petrol", "Petrol"], ["sonne", "Sonne"]];
+  var KOERPER = [["weiss", "Weiß"], ["mint", "Mint"], ["pfirsich", "Pfirsich"]];
+  function erlaubt(liste, wert) { return liste.some(function (s) { return s[0] === wert; }) ? wert : liste[0][0]; }
+  function zeigeStil(el, w) {
+    el.dataset.kopf = erlaubt(KOPF, w.kopf);
+    el.dataset.koerper = erlaubt(KOERPER, w.koerper);
+  }
+  // Stift-Knopf: Fenstername (alle Fenster) und Farben (nur art.farbwahl)
+  function passeAn(el, w, a) {
+    var box = document.createElement("div");
+    box.className = "stil-wahl";
+    box.innerHTML = '<div><label class="feld-label" for="fenster-name">Name des Fensters</label>' +
+      '<input class="feld" id="fenster-name" maxlength="30" autocomplete="off" enterkeyhint="done"></div>';
+    var feld = box.querySelector("input");
+    feld.value = w.name || "";
+    feld.placeholder = el.querySelector(".window__title span").dataset.standard || a.titel;
+    var kopf, koerper;
+    if (a.farbwahl) {
+      kopf = T.wahl("Titelleiste", "stil-kopf", KOPF, erlaubt(KOPF, w.kopf));
+      koerper = T.wahl("Fenster", "stil-koerper", KOERPER, erlaubt(KOERPER, w.koerper));
+      box.append(kopf, koerper);
+    }
+    T.dialog({ titel: a.farbwahl ? "Name und Farben" : "Name", icon: "stift", inhalt: box,
+      knoepfe: [{ text: "Fertig", wert: "ok" }, { text: "Abbrechen", wert: "", hell: true }] }).then(function (wert) {
+      if (wert !== "ok") return;
+      w.name = feld.value.trim();
+      if (!w.name) delete w.name;
+      zeigeName(el, w, a);
+      if (a.farbwahl) {
+        w.kopf = kopf.querySelector("input:checked").value;
+        w.koerper = koerper.querySelector("input:checked").value;
+        zeigeStil(el, w);
+      }
+      T.speichere();
+    });
+    setTimeout(function () { feld.focus(); feld.select(); }, 0);
+  }
+
+  function zeigeKlappe(el, w, knopf) {
+    el.classList.toggle("is-zu", !!w.zu);
+    knopf.textContent = w.zu ? "+" : "−";
+    knopf.setAttribute("aria-expanded", w.zu ? "false" : "true");
+    knopf.setAttribute("aria-label", w.zu ? "Fenster ausklappen" : "Fenster einklappen");
+    knopf.title = knopf.getAttribute("aria-label");
+    setzeLage(el, w);
   }
 
   function baue(w, z) {
@@ -69,13 +131,22 @@
         '<div class="window__tools"><div class="widget__werkzeug"></div>' +
         '<div class="window__buttons" aria-hidden="true"><i></i><i></i><i></i></div></div></div>' +
         '<div class="widget__inhalt"></div>' + ecken;
-      el.querySelector(".window__title span").textContent = a.titel;
+      zeigeName(el, w, a);
+      // Ein-/Ausklappen: immer sichtbar, nicht nur am ausgewählten Widget
+      var klappe = document.createElement("button");
+      klappe.type = "button";
+      klappe.className = "widget__klappe";
+      klappe.addEventListener("click", function () { w.zu = !w.zu; zeigeKlappe(el, w, klappe); T.speichere(); });
+      el.querySelector(".window__tools").insertBefore(klappe, el.querySelector(".window__buttons"));
+      zeigeStil(el, w);
     }
     tafel.appendChild(el);
     setzeLage(el, w);
+    if (klappe) zeigeKlappe(el, w, klappe);
     var inst = a.erstelle(el.querySelector(".widget__inhalt"), w.daten, T.speichere) || {};
     instanzen[w.id] = inst;
     var wz = el.querySelector(".widget__werkzeug");
+    if (!a.frei) wz.appendChild(T.iconKnopf("stift", a.farbwahl ? "Name und Farben ändern" : "Name ändern", function () { passeAn(el, w, a); }));
     if (inst.einstellungen) wz.appendChild(T.iconKnopf("zahnrad", "Einstellungen", inst.einstellungen));
     wz.appendChild(T.iconKnopf("muell", "Widget löschen", function () { entferne(w.id); }));
   }

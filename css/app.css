@@ -411,3 +411,100 @@ label.btn { cursor: pointer; }
 .zufall__paar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .zufall__paar .feld { flex: 1 1 160px; width: auto; }
 .zufall__paar .feld-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ============================================================
+   BILD – Foto passt ganz hinein (Fotos dürfen glatt skaliert werden)
+   ============================================================ */
+.bild { position: relative; flex: 1; min-height: 0; display: grid; place-items: center; }
+.bild img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.bild img[hidden], .bild .btn[hidden] { display: none; }
+.dialog__extra { margin-top: 16px; }
+
+/* ============================================================
+   TEXT – Leiste nur am ausgewählten Widget
+   ============================================================ */
+.text { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+.text__leiste { flex: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.widget:not(.is-ausgewaehlt) .text__leiste { display: none; }
+.text__leiste .btn { min-height: 40px; padding: 0 12px; font-size: 1rem; }
+.text__leiste .btn[aria-pressed="true"] { background: var(--active-bg); color: var(--active-text); border-color: var(--active-bg); }
+.text__leiste .btn[aria-pressed="true"] mark { color: var(--text); }
+.text__feld {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  outline: none;
+  font-size: 1.5rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  cursor: text;
+}
+.text[data-groesse="normal"] .text__feld { font-size: 1.1875rem; }
+.text[data-groesse="riesig"] .text__feld { font-size: 2.5rem; line-height: 1.2; }
+.text__feld:focus-visible { box-shadow: inset 0 0 0 2px var(--tint-teal-35); }
+.text__feld.is-leer::before { content: attr(data-leer); color: var(--text-muted); pointer-events: none; }
+.text__feld p, .text__feld ul, .text__feld ol { margin: 0 0 .4em; }
+.text__feld ul, .text__feld ol, .folie--text ul { padding-left: 1.3em; }
+
+/* ============================================================
+   FOLIEN – Bühne, darunter Pfeile und Zähler
+   ============================================================ */
+.folien { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+.folien__buehne { position: relative; flex: 1; min-height: 0; display: flex; }
+.folien__fuss { flex: none; display: flex; align-items: center; justify-content: center; gap: 16px; }
+.folien__fuss[hidden] { display: none; }
+.folien__fuss .counter { min-width: 7.5ch; text-align: center; }
+.folie--bild { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.folie--text { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; justify-content: center; gap: .5em; padding: 0 4cqw; font-size: min(6cqh, 3.4cqw); line-height: 1.35; }
+.folie--text .heading { font-size: min(11cqh, 6.5cqw); }
+.folie--text p, .folie--text ul { margin: 0; }
+.folien__leer { margin: auto; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; color: var(--text-muted); font-weight: 700; font-size: 1.1875rem; }
+.folien__leer p { margin: 0; }
+
+/* Dialog „Folien bearbeiten“ */
+.folien__liste { margin-bottom: 8px; }
+.folien__zeile { padding: 8px 12px; gap: 12px; }
+.folien__zeile .row__num { width: 40px; height: 40px; font-size: 1rem; }
+.folien__zeile .row__title { flex: 1; min-width: 0; font-size: 1.0625rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.folien__vorschau { flex: none; width: 64px; height: 40px; object-fit: cover; border: var(--hair) solid var(--line-color); }
+.folien__knoepfe { flex: none; display: flex; gap: 4px; }
+.folien__knoepfe .btn { min-width: 40px; min-height: 40px; }
+.folie__abstand { margin-top: 16px; }
+
+/* ============================================================
+   FENSTER-STILE UND EINKLAPPEN
+   ============================================================ */
+.widget[data-kopf="petrol"] .window__titlebar { background: var(--c-petrol-dark); }
+.widget[data-kopf="sonne"] .window__titlebar { background: var(--c-sun); }
+.widget[data-koerper="mint"] { background: var(--tint-teal-8); }
+.widget[data-koerper="pfirsich"] { background: var(--tint-orange-20); }
+.stil-wahl { display: flex; flex-direction: column; gap: 20px; }
+
+.widget__klappe {
+  position: relative;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: var(--white);
+  border: var(--frame-width) solid var(--c-petrol-dark);
+  font: 700 1.125rem/1 var(--font-mono);
+  color: var(--text);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.widget__klappe:hover { background: var(--tint-orange-20); }
+.widget__klappe::before { content: ""; position: absolute; inset: -8px; }   /* größere Trefferfläche für Finger */
+.widget.is-zu .widget__inhalt, .widget.is-zu .widget__ecke { display: none !important; }
+.widget.is-zu .window__titlebar { border-bottom: 0; }
+
+/* Text markieren und Listen mit dem Finger scrollen (das Widget selbst ist sonst „nur ziehen“) */
+.kein-ziehen { touch-action: pan-x pan-y; }
+.text__feld, .widget input, .widget textarea { -webkit-user-select: text; user-select: text; }
+
+/* Eingeklappt: kompakt, nur Icon, Name und Knöpfe */
+.widget.is-zu { min-width: 0; max-width: 320px; box-shadow: var(--shadow-sm); }
+.widget.is-zu .window__titlebar { min-height: 0; padding: 4px 6px; }
+.widget.is-zu .window__buttons { display: none; }

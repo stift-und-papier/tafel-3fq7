@@ -88,4 +88,73 @@
     });
     return f;
   };
+
+  // ---------- Bilder vom Gerät ----------
+  // Öffnet die Dateiauswahl (am iPad auch die Fotos-App) → Promise mit Liste von data:-URLs.
+  // Große Bilder werden verkleinert (längste Seite höchstens 1600 px), damit der Browser-Speicher
+  // (meist nur etwa 5 MB für alles) nicht sofort voll ist. Fotos als JPEG, Bilder mit Durchsicht als PNG.
+  var MAX_SEITE = 1600, KLEIN_GENUG = 300 * 1024;
+  T.bilderWaehlen = function (mehrere) {
+    return new Promise(function (fertig) {
+      var input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.multiple = !!mehrere;
+      input.addEventListener("change", function () {
+        Promise.all(Array.prototype.map.call(input.files, verkleinere)).then(function (urls) {
+          fertig(urls.filter(Boolean));
+        });
+      });
+      input.click();
+    });
+  };
+
+  function alsDataUrl(datei) {
+    return new Promise(function (fertig) {
+      var r = new FileReader();
+      r.onload = function () { fertig(r.result); };
+      r.onerror = function () { fertig(null); };
+      r.readAsDataURL(datei);
+    });
+  }
+
+  function verkleinere(datei) {
+    if (!/^image\//.test(datei.type)) return Promise.resolve(null);
+    return new Promise(function (fertig) {
+      var url = URL.createObjectURL(datei), img = new Image();
+      img.onerror = function () { URL.revokeObjectURL(url); fertig(null); };
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var b = img.naturalWidth, h = img.naturalHeight, f = Math.min(1, MAX_SEITE / Math.max(b, h));
+        // kleine Dateien unverändert lassen (bleiben scharf, auch Pixelgrafik)
+        if (f === 1 && datei.size <= KLEIN_GENUG && /^image\/(png|jpeg|gif|webp)$/.test(datei.type)) return alsDataUrl(datei).then(fertig);
+        var c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(b * f));
+        c.height = Math.max(1, Math.round(h * f));
+        var ctx = c.getContext("2d");
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        fertig(hatDurchsicht(ctx, c) ? c.toDataURL("image/png") : c.toDataURL("image/jpeg", 0.82));
+      };
+      img.src = url;
+    });
+  }
+
+  function hatDurchsicht(ctx, c) {
+    var px = ctx.getImageData(0, 0, c.width, c.height).data;
+    for (var i = 3; i < px.length; i += 4) if (px[i] < 255) return true;
+    return false;
+  }
+
+  // Nur echte eingebettete Bilder anzeigen (Schutz vor manipulierten Sicherungsdateien)
+  T.istBild = function (url) { return typeof url === "string" && /^data:image\/(png|jpeg|gif|webp);base64,/.test(url); };
+
+  // Speichern nach einem neuen Bild; passt es nicht mehr in den Speicher, wird es zurückgenommen
+  T.speichereBild = function (zuruecknehmen) {
+    if (T.speichere(true)) return true;
+    zuruecknehmen();
+    T.speichere(true);
+    T.dialog({ titel: "Speicher voll", icon: "verbot",
+      inhalt: "Das Bild passt nicht mehr in den Browser-Speicher. Lösche ein paar Bilder oder Folien und versuche es noch einmal." });
+    return false;
+  };
 })();

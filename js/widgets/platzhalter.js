@@ -6,10 +6,7 @@
   "use strict";
   var T = window.Tafel;
   [
-    ["bild", "Bild", "bild", 4, 480, 360],
-    ["text", "Text", "text", 4, 480, 280],
-    ["stundenplan", "Stundenplan", "kalender", 5, 720, 480],
-    ["folien", "Folien", "folien", 4, 720, 520]
+    ["stundenplan", "Stundenplan", "kalender", 5, 720, 480]
   ].forEach(function (p) {
     T.registriere(p[0], {
       titel: p[1], icon: p[2], groesse: { b: p[4], h: p[5] },

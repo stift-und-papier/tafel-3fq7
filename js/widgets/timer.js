@@ -133,7 +133,10 @@
       }
 
       function titel() {
-        el.closest(".widget").querySelector(".window__title span").textContent = d.modus === "timer" ? "Timer" : "Stoppuhr";
+        // Standardtitel; einen eigenen Fensternamen (dataset.eigen) nicht überschreiben
+        var span = el.closest(".widget").querySelector(".window__title span");
+        span.dataset.standard = d.modus === "timer" ? "Timer" : "Stoppuhr";
+        if (!span.dataset.eigen) span.textContent = span.dataset.standard;
       }
 
       titel();
