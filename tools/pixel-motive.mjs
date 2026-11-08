@@ -4,10 +4,22 @@
 // Ergebnis: assets/deko/<name>.svg (Originalgröße) und assets/icons/<name>.svg (in einem 14×14-Feld).
 import { writeFileSync } from "node:fs";
 
+// Farben aus css/tokens.css (Design v2) – Buchstaben bleiben, damit alle Karten weiter passen
 const FARBE = {
-  K: "#3B2418", // Kontur dunkelbraun
-  w: "#FFF7EC", c: "#E3CCB0", a: "#F6C49A", o: "#EE9B5E", y: "#F6D774", Y: "#FBEAA8",
-  s: "#9DBB8E", g: "#5F8A50", b: "#A9C8EA", l: "#CDCFEE", r: "#E7A3B2", t: "#E0805E", m: "#E3BC55"
+  K: "#264653", // Kontur: --c-petrol-dark
+  w: "#FFFFFF", // --white
+  c: "#F9EED5", // --cream-deep
+  a: "#FBDAC0", // --tint-orange-40
+  o: "#F4A261", // --c-orange
+  y: "#E9C46A", // --c-sun
+  Y: "#F6E7C3", // --tint-sun-40
+  s: "#8AB17D", // --c-sage
+  g: "#287271", // --c-petrol
+  b: "#2A9D8F", // --c-teal
+  l: "#B4DDD8", // --tint-teal-35
+  r: "#E97C61", // --c-coral-soft
+  t: "#E76F51", // --c-coral
+  m: "#EFB366"  // --c-honey
 };
 
 // --- Hilfen für runde Formen: Füllung berechnen, Kontur automatisch ---
@@ -22,7 +34,23 @@ function umriss(z) {
 }
 const d = (x, y, cx, cy) => Math.hypot(x - cx, y - cy);
 
+const pfeilRechts = [
+  ".....K.....",
+  ".....KK....",
+  ".....KtK...",
+  "KKKKKKttK..",
+  "KttttttttK.",
+  "KtttttttttK",
+  "KttttttttK.",
+  "KKKKKKttK..",
+  ".....KtK...",
+  ".....KK....",
+  ".....K....."];
+
 const KARTEN = {
+  // ---------- Sprites neben der Lehrer:in-Figur ----------
+  ausrufe: [".KKK.","KyyyK","KyyyK","KyyyK","KyyyK","KyyyK",".KyK.",".KyK.","..K..",".....",".KKK.","KyyyK","KyyyK",".KKK."],
+  frage: ["..KKKKK..",".KbbbbbK.","KbbKKKbbK","KbK...KbK",".K....KbK",".....KbbK","....KbbK.","...KbbK..","...KbK...","....K....","...KKK...","...KbK...","...KKK..."],
   // ---------- Deko ----------
   herz: [
     "..KKK..KKK..",
@@ -85,18 +113,21 @@ const KARTEN = {
     "..KyywyyyK..",
     "ooKyyyyyyKoo",
     "KKKKKKKKKKKK"],
-  wecker: [
+  wecker: [   // runder Körper (12 × 11), Glocken oben, Füße unten
     ".KK......KK.",
     "KttK....KttK",
     "KtKKKKKKKKtK",
     ".KKwwwwwwKK.",
-    ".KwwwKwwwwK.",
-    "KwwwwKwwwwwK",
-    "KwwwwKKKwwwK",
+    ".KwwwwKwwwK.",
+    "KwwwwwKwwwwK",
+    "KwwwwwKwwwwK",
+    "KwwwwwKKKwwK",
+    "KwwwwwwwwwwK",
     "KwwwwwwwwwwK",
     ".KwwwwwwwwK.",
     ".KKwwwwwwKK.",
-    ".K.KKKKKK.K."],
+    "..KKKKKKKK..",
+    ".K........K."],
   teller: umriss(raster(12, 12, (x, y) => d(x, y, 6, 6) <= 3.3 ? "l" : d(x, y, 6, 6) <= 5 ? "w" : "")),
   verbot: umriss(raster(12, 12, (x, y, i, j) => {
     const r = d(x, y, 6, 6);
@@ -121,11 +152,167 @@ const KARTEN = {
     const r = d(x, y, 6, 6), a = Math.atan2(y - 6, x - 6);
     if (r < 1.6) return "";
     return r <= (Math.cos(8 * a) > 0.2 ? 5.2 : 3.9) ? "o" : "";
-  }))
+  })),
+
+  // ---------- Icons für die Tafel-App ----------
+  // Widget-Leiste
+  wuerfel: [
+    ".KKKKKKKKKK.",
+    "KwwwwwwwwwwK",
+    "KwKKwwwwKKwK",
+    "KwKKwwwwKKwK",
+    "KwwwwwwwwwwK",
+    "KwwwwKKwwwwK",
+    "KwwwwKKwwwwK",
+    "KwwwwwwwwwwK",
+    "KwKKwwwwKKwK",
+    "KwKKwwwwKKwK",
+    "KccccccccccK",
+    ".KKKKKKKKKK."],
+  bild: [
+    "KKKKKKKKKKKK",
+    "KbbbbbbbbbbK",
+    "KbbbbbbbyybK",
+    "KbbbbbbbyybK",
+    "KbbbbbbbbbbK",
+    "KbbbKbbbbbbK",
+    "KbbKsKbbbbbK",
+    "KbKsssKbbKbK",
+    "KKsssssKKsKK",
+    "KssssssssssK",
+    "KssssssssssK",
+    "KKKKKKKKKKKK"],
+  text: [
+    "KKKKKKKKKKKK",
+    "KwwwwwwwwwwK",
+    "KwKKKKKKKKwK",
+    "KwKKKKKKKKwK",
+    "KwwwwKKwwwwK",
+    "KwwwwKKwwwwK",
+    "KwwwwKKwwwwK",
+    "KwwwwKKwwwwK",
+    "KwwwwKKwwwwK",
+    "KwwwwKKwwwwK",
+    "KwwwwwwwwwwK",
+    "KKKKKKKKKKKK"],
+  uhr: umriss(raster(11, 11, (x, y, i, j) => {
+    if (d(x, y, 5.5, 5.5) > 4.6) return "";
+    if (i === 5 && j === 5) return "t";
+    if ((i === 5 && j >= 2 && j <= 5) || (j === 5 && i >= 5 && i <= 8)) return "K";
+    return "w";
+  })),
+  kalender: [
+    "KKKKKKKKKKKKK",
+    "KtttttttttttK",
+    "KtttttttttttK",
+    "KKKKKKKKKKKKK",
+    "KwwKwwKwwKwwK",
+    "KwwKwwKwwKwwK",
+    "KKKKKKKKKKKKK",
+    "KwwKssKwwKwwK",
+    "KwwKssKwwKwwK",
+    "KKKKKKKKKKKKK",
+    "KwwKwwKwwKwwK",
+    "KwwKwwKwwKwwK",
+    "KKKKKKKKKKKKK"],
+  folien: [
+    "KKKKKKKKKKKK",
+    "KwwwwwwwwwwK",
+    "KwKKKKwwwwwK",
+    "KwwwwwwwwwwK",
+    "KwwwwwwwowwK",
+    "KwwwwowwowwK",
+    "KwwowowwowwK",
+    "KwwowowwowwK",
+    "KKKKKKKKKKKK",
+    ".....KK.....",
+    "....K..K....",
+    "...K....K..."],
+  // Knöpfe und Werkzeugleiste
+  muell: [
+    "....KKKK....",
+    "KKKKKKKKKKKK",
+    "KccccccccccK",
+    "KKKKKKKKKKKK",
+    ".KwwKwwKwwK.",
+    ".KwwKwwKwwK.",
+    ".KwwKwwKwwK.",
+    ".KwwKwwKwwK.",
+    ".KwwKwwKwwK.",
+    ".KwwKwwKwwK.",
+    ".KwwwwwwwwK.",
+    "..KKKKKKKK.."],
+  stift: [
+    "........KKK.",
+    ".......KrrrK",
+    "......KyKrrK",
+    ".....KyyyKK.",
+    "....KyyyyK..",
+    "...KyyyyK...",
+    "..KyyyyK....",
+    ".KcyyyK.....",
+    ".KccyK......",
+    "KKKcK.......",
+    "KKKK........"],
+  start: [
+    "KK........",
+    "KgKK......",
+    "KgggKK....",
+    "KgggggKK..",
+    "KgggggggKK",
+    "KggggggggK",
+    "KgggggggKK",
+    "KgggggKK..",
+    "KgggKK....",
+    "KgKK......",
+    "KK........"],
+  pause: Array.from({ length: 10 }, (_, i) => i === 0 || i === 9 ? "KKKK..KKKK" : "KmmK..KmmK"),
+  stopp: Array.from({ length: 10 }, (_, i) => i === 0 || i === 9 ? "KKKKKKKKKK" : "KttttttttK"),
+  vollbild: [
+    "KKKK....KKKK",
+    "KKKK....KKKK",
+    "KK........KK",
+    "KK........KK",
+    "............",
+    "............",
+    "............",
+    "............",
+    "KK........KK",
+    "KK........KK",
+    "KKKK....KKKK",
+    "KKKK....KKKK"],
+  "pfeil-rechts": pfeilRechts,
+  "pfeil-links": pfeilRechts.map((s) => [...s].reverse().join("")),
+  kreuz: umriss(raster(13, 13, (x, y, i, j) => i < 1 || j < 1 || i > 11 || j > 11 ? "" : (Math.abs(i - j) <= 1 || Math.abs(i + j - 12) <= 1) ? "t" : "")),
+  speichern: [
+    "KKKKKKKKKKK.",
+    "KbKwwwwwKbKK",
+    "KbKwwwwwKbbK",
+    "KbKwwwKwKbbK",
+    "KbKKKKKKKbbK",
+    "KbbbbbbbbbbK",
+    "KbKKKKKKKKbK",
+    "KbKwwwwwwKbK",
+    "KbKwwwwwwKbK",
+    "KbKwwwwwwKbK",
+    "KbKwwwwwwKbK",
+    "KKKKKKKKKKKK"],
+  laden: [
+    "KKKKK.......",
+    "KyyyyKKKKKK.",
+    "KyyyyyyyyyyK",
+    "KKKKKKKKKKKK",
+    "KmmmmmmmmmmK",
+    "KmmmmmmmmmmK",
+    "KmmmmmmmmmmK",
+    "KmmmmmmmmmmK",
+    "KmmmmmmmmmmK",
+    "KKKKKKKKKKKK"]
 };
 
-const DEKO = ["stern", "funkel", "herz", "wolke", "sonne", "mond"];
-const ICONS = ["sonne-auf", "sonne", "mond", "wecker", "herz", "info", "verbot", "waage", "zahnrad", "teller"];
+const DEKO = ["ausrufe", "frage", "herz"];
+const ICONS = ["sonne-auf", "sonne", "mond", "wecker", "herz", "info", "verbot", "waage", "zahnrad", "teller",
+  "wuerfel", "bild", "text", "uhr", "kalender", "folien", "muell", "stift", "start", "pause", "stopp", "vollbild", "pfeil-links", "pfeil-rechts", "kreuz", "speichern", "laden"];
 
 // Prüfen: alle Zeilen gleich lang, nur bekannte Farben
 for (const n of new Set([...DEKO, ...ICONS])) {

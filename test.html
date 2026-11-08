@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<title>Selbsttest</title>
+<!-- Prüft, dass kaputte Sicherungsdateien abgelehnt werden. Öffnen und Ergebnis lesen. -->
+<pre id="aus"></pre>
+<script src="js/speicher.js"></script>
+<script>
+  var T = window.Tafel, fehler = 0, aus = document.getElementById("aus");
+  function soll(name, ok) { if (!ok) fehler++; aus.textContent += (ok ? "OK    " : "FEHLER ") + name + "\n"; }
+  var w = { id: "w1", typ: "uhr", x: 0, y: 0, b: 400, h: 240, daten: {} };
+  var gut = { version: 1, aktiv: "k1", kurse: [{ id: "k1", name: "7b", widgets: [w] }], letzteSicherung: null };
+  soll("gültige Sicherung", T.pruefe(gut));
+  soll("leere Kursliste abgelehnt", !T.pruefe({ version: 1, kurse: [] }));
+  soll("falsche Version abgelehnt", !T.pruefe(Object.assign({}, gut, { version: 2 })));
+  soll("Position als Text abgelehnt", !T.pruefe({ version: 1, kurse: [{ id: "k1", name: "7b", widgets: [Object.assign({}, w, { x: "12" })] }] }));
+  soll("fehlende Widget-Daten abgelehnt", !T.pruefe({ version: 1, kurse: [{ id: "k1", name: "7b", widgets: [Object.assign({}, w, { daten: null })] }] }));
+  soll("null abgelehnt", !T.pruefe(null));
+  aus.textContent += fehler ? "\n" + fehler + " Fehler" : "\nAlles in Ordnung";
+</script>
+</html>

@@ -1,101 +1,78 @@
 /* ============================================================
-   TOKENS – alle Design-Werte an einem Ort
-   Farben, Pixel-Raster, Schriften, Kartenfarben, Himmelsfarben.
-   Willst du etwas am Aussehen ändern, fang HIER an.
+   TOKENS – alle Design-Werte an einem Ort (Design v2 „Retro-Fenster“)
+   Farben NUR von hier. Neue Farbe? Hier anlegen und den Kontrast in
+   styleguide.html prüfen (Text mindestens 4,5 : 1, große Schrift 3 : 1).
    ============================================================ */
 
-/* ---------- Schrift: Pixelify Sans (frei, Lizenz OFL – assets/fonts/OFL.txt) ---------- */
-@font-face {
-  font-family: "Pixelify Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("../assets/fonts/pixelify-sans-latin-400-normal.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Pixelify Sans";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("../assets/fonts/pixelify-sans-latin-700-normal.woff2") format("woff2");
-}
+/* ---------- Schriften (frei, Lizenz OFL – assets/fonts/OFL-*.txt) ---------- */
+@font-face { font-family: "Source Sans 3"; font-weight: 400; font-display: swap; src: url("../assets/fonts/source-sans-3-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Source Sans 3"; font-weight: 700; font-display: swap; src: url("../assets/fonts/source-sans-3-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Source Sans 3"; font-weight: 800; font-display: swap; src: url("../assets/fonts/source-sans-3-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-weight: 400; font-display: swap; src: url("../assets/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-weight: 700; font-display: swap; src: url("../assets/fonts/jetbrains-mono-latin-700-normal.woff2") format("woff2"); }
 
 :root {
-  /* ---------- Pixel-Raster ----------
-     --px ist EIN Pixel der Pixelgrafik. Rahmen, Abstände, Ecken, Muster
-     und Icon-Größen sind immer ganze Vielfache davon. */
-  --px: 4px;
-  --line: calc(var(--px) / 2);      /* dünne Außenlinie */
-  --border: var(--px);              /* dicker Rahmen */
-  --step: var(--px);                /* eine Treppenstufe in den Ecken */
+  /* ---------- Palette (von dunkel nach hell/warm) ---------- */
+  --c-petrol-dark: #264653;
+  --c-petrol:      #287271;
+  --c-teal:        #2A9D8F;
+  --c-sage:        #8AB17D;
+  --c-sun:         #E9C46A;
+  --c-honey:       #EFB366;
+  --c-orange:      #F4A261;
+  --c-orange-deep: #EE8959;
+  --c-coral:       #E76F51;
+  --c-coral-soft:  #E97C61;
+  --white:         #FFFFFF;
+  --cream:         #FCF6E9;   /* Seitenhintergrund (= 15 % Sonne in Weiß) */
+  --cream-deep:    #F9EED5;   /* abgesetzte Flächen (ca. 28 % Sonne in Weiß) */
 
-  /* ---------- Grundfarben ---------- */
-  --cream: #FFF7EC;
-  --page: #FFF4E4;                  /* Seitenhintergrund (ändert sich je Stimmung, siehe unten) */
-  --dot: #E9D3B8;                   /* Punktraster */
-  --ink: #3B2418;                   /* Haupttext, Kontrast mit Creme ca. 14:1 */
-  --ink-soft: #5E4030;              /* Nebentext, Kontrast mit Creme ca. 9:1 */
-  --terracotta: #D9714E;
-  --terracotta-dark: #A84A2A;       /* Knöpfe, Kontrast mit Creme ca. 5:1 */
-  --mustard: #E8B23A;
+  /* ---------- Tönungen: Palettenfarbe mit Weiß gemischt (Zahl = Anteil Farbe) ---------- */
+  --tint-teal-8:         #EEF7F6;
+  --tint-teal-10:        #EAF5F4;
+  --tint-teal-20:        #D4EBE9;
+  --tint-teal-35:        #B4DDD8;
+  --tint-sun-40:         #F6E7C3;
+  --tint-coral-soft-15:  #FCEBE7;
+  --tint-orange-20:      #FDECDF;
+  --tint-orange-40:      #FBDAC0;
+  --tint-petrol-dark-6:  #F2F4F5;
+  --tint-petrol-dark-12: #E5E9EA;
+  --tint-sage-20:        #E8EFE5;
+  /* Einzige Mischfarbe: Koralle + Petrol-dunkel 50 : 50 – Text auf hellem Orange */
+  --brown: #875B52;
+  /* Abdunklung hinter Dialogen: Petrol-dunkel, halb durchsichtig */
+  --veil: rgb(38 70 83 / .55);
+
+  /* ---------- Rollen (so werden die Farben eingesetzt) ---------- */
+  --text:          var(--c-petrol-dark);
+  --text-muted:    var(--c-petrol);
+  --line-color:    var(--tint-teal-35);     /* dünne Rahmen von Karten, Zeilen, Chips */
+  --shadow-color:  var(--c-orange);         /* harter Versatzschatten */
+  --shadow-small:  var(--c-honey);
+  --mark:          var(--c-sun);
+  --focus:         var(--c-petrol-dark);
+  --active-bg:     var(--c-petrol-dark);
+  --active-text:   var(--white);
+  --active-accent: var(--c-coral);
+  --grid-line:     var(--tint-petrol-dark-6);
+  --titlebar: linear-gradient(90deg, var(--c-teal), var(--c-sage) 28%, var(--c-sun) 52%, var(--c-orange) 76%, var(--c-coral));
+  --hero-bg: linear-gradient(135deg, var(--cream) 0%, var(--tint-teal-10) 30%, var(--tint-sun-40) 55%, var(--tint-coral-soft-15) 78%, var(--cream) 100%);
+
+  /* ---------- Maße ---------- */
+  --px: 4px;                 /* ein Pixel der Pixelgrafik: Icons sind ganze Vielfache davon */
+  --hair: 1px;               /* dünne Linie */
+  --frame-width: 2px;             /* Rahmen der Fenster-Karte */
+  --shadow: 6px 6px 0 var(--shadow-color);
+  --shadow-sm: 3px 3px 0 var(--shadow-small);
+  --grid-size: 32px;
+  --gap: 16px;
 
   /* ---------- Schriften ---------- */
-  --font-text: ui-rounded, "SF Pro Rounded", "Nunito", "Varela Round", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
-  --font-pixel: "Pixelify Sans", var(--font-text);
-  --size-text: 1.0625rem;           /* Fließtext 17 px */
-  --size-title: clamp(2rem, 7.5vw, 3.5rem);
-  --size-tab: 1.3rem;
-  --size-toggle: 1.25rem;
-
-  /* ---------- Breite der Seite ---------- */
-  --page-width: 1120px;
-
-  /* ---------- Ecken mit zwei Treppenstufen (statt Rundungen) ---------- */
-  --stairs: polygon(
-    0 calc(2 * var(--step)), var(--step) calc(2 * var(--step)), var(--step) var(--step), calc(2 * var(--step)) var(--step), calc(2 * var(--step)) 0,
-    calc(100% - 2 * var(--step)) 0, calc(100% - 2 * var(--step)) var(--step), calc(100% - var(--step)) var(--step), calc(100% - var(--step)) calc(2 * var(--step)), 100% calc(2 * var(--step)),
-    100% calc(100% - 2 * var(--step)), calc(100% - var(--step)) calc(100% - 2 * var(--step)), calc(100% - var(--step)) calc(100% - var(--step)), calc(100% - 2 * var(--step)) calc(100% - var(--step)), calc(100% - 2 * var(--step)) 100%,
-    calc(2 * var(--step)) 100%, calc(2 * var(--step)) calc(100% - var(--step)), var(--step) calc(100% - var(--step)), var(--step) calc(100% - 2 * var(--step)), 0 calc(100% - 2 * var(--step)));
-  /* nur oben Treppen (für Reiter) */
-  --stairs-top: polygon(
-    0 calc(2 * var(--step)), var(--step) calc(2 * var(--step)), var(--step) var(--step), calc(2 * var(--step)) var(--step), calc(2 * var(--step)) 0,
-    calc(100% - 2 * var(--step)) 0, calc(100% - 2 * var(--step)) var(--step), calc(100% - var(--step)) var(--step), calc(100% - var(--step)) calc(2 * var(--step)), 100% calc(2 * var(--step)),
-    100% 100%, 0 100%);
-
-  /* ---------- Standard-Kartenfarbe (Apricot) ---------- */
-  --outline: #8A4B2E;   /* dünne Außenlinie */
-  --frame: #E9A06E;     /* dicker Rahmen und Reiter */
-  --fill: #FDEBD8;      /* helle Füllung (darauf steht der Text) */
-  --pressed: #F6C49A;   /* Füllung eines gedrückten Knopfs */
+  --font-sans: "Source Sans 3", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --size-text: 1.0625rem;    /* Fließtext 17 px */
+  --size-label: .8125rem;    /* Mono-Labels 13 px, fett */
+  --size-heading: clamp(2rem, 4vw, 3.25rem);
 }
 
-/* ============================================================
-   KARTENFARBEN
-   Jede Variante setzt vier Farben. Text (--ink) hat auf Rahmen und
-   Füllung immer mindestens 5:1 Kontrast (AA erfüllt).
-   ============================================================ */
-.card--apricot { --outline: #8A4B2E; --frame: #E9A06E; --fill: #FDEBD8; --pressed: #F6C49A; }
-.card--sage    { --outline: #4A6644; --frame: #9DBB8E; --fill: #EEF4E6; --pressed: #C8DCB9; }
-.card--dusk    { --outline: #4B4C7E; --frame: #A9ACDA; --fill: #EFEFFA; --pressed: #CDCFEE; }
-.card--mustard { --outline: #7E5C14; --frame: #E3BC55; --fill: #FDF4D9; --pressed: #F3D88C; }
-.card--rose    { --outline: #8E4456; --frame: #E7A3B2; --fill: #FDEFF2; --pressed: #F5C9D2; }
-.card--warning { --outline: #7E2A1C; --frame: #E0805E; --fill: #FFF0E8; --pressed: #F6C1AE; }
-/* Kopfkarte, Fußleiste: Apricot-Orange */
-.header-card, .footer-bar { --outline: #8A4B2E; --frame: #EE9B5E; --fill: #FFF3E5; }
-
-/* ============================================================
-   STIMMUNGEN (zum Toggle passend)
-   Pro Stimmung: 6 Himmelsfarben (oben --sky-1 … unten --sky-6)
-   und ein leicht getönter Seitenhintergrund mit Punktraster.
-   Der Name hinter data-sky / data-mood steht im HTML am Toggle-Knopf.
-   ============================================================ */
-/* Morgen: Sonnenaufgang – zartes Blau und Flieder oben, Rosé, Pfirsich unten */
-[data-sky="morgen"] { --sky-1: #C6D4EE; --sky-2: #D6CCEA; --sky-3: #E6C9E0; --sky-4: #F3C8CF; --sky-5: #F8D0B6; --sky-6: #FBDDBD; }
-/* Mittag: helles Himmelblau, Creme, Gelb */
-[data-sky="mittag"] { --sky-1: #94CAE8; --sky-2: #ADD8EE; --sky-3: #C6E4EF; --sky-4: #DDEEE8; --sky-5: #F3EFD0; --sky-6: #FAE7A6; }
-/* Abend: Nachtblau oben, Violett, Rosa, Orange unten */
-[data-sky="abend"]  { --sky-1: #232C5A; --sky-2: #363C77; --sky-3: #574A8A; --sky-4: #855A94; --sky-5: #C77592; --sky-6: #EE9F7A; }
-
-body[data-mood="morgen"] { --page: #FCEBE3; --dot: #EBC6BC; }   /* Pfirsich-Rosé */
-body[data-mood="mittag"] { --page: #FFF6E2; --dot: #E5D5AC; }   /* warmes Gelb-Creme */
-body[data-mood="abend"]  { --page: #EFE6F1; --dot: #CDBDD8; }   /* zartes Dämmer-Flieder */

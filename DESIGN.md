@@ -1,236 +1,156 @@
-# Design-Handbuch
+# Design-Handbuch (Design v2 „Retro-Fenster“)
 
-Dieses Projekt hat einen **Pixel-Art-Planner-Look**: Creme-Papier mit Punktraster, Karten mit dicken Pixelrahmen und Reitern und ein gestufter Pixel-Himmel. Hier steht, wie alles funktioniert und wie du es benutzt.
+Die Tafel sieht aus wie ein freundlicher, alter Computer-Schreibtisch: cremefarbener Grund mit feinem Gitter, weiße Fenster-Karten mit dünnem Rahmen, einer bunten Titelleiste und einem harten orangen Schatten. Pixel-Art gibt es nur bei den Icons und der Lehrer:in-Figur.
 
-**Wo steht was?**
+**Alle Bausteine auf einen Blick:** Öffne `styleguide.html` im Browser. Dort stehen auch die Farbtafel und die Kontrast-Tabelle, die direkt aus `tokens.css` gerechnet werden.
 
 | Datei | Inhalt |
 |---|---|
 | `css/tokens.css` | alle Farben, Größen und Schriften. Hier änderst du das Aussehen. |
-| `css/components.css` | die Bausteine (Karte, Reiter, Toggle …) |
-| `css/sky.css` | der Pixel-Himmel |
-| `js/toggle.js` | das Umschalten zwischen Abschnitten |
-| `assets/` | Schrift, Deko-Motive, Icons |
-| `tools/pixel-motive.mjs` | Werkzeug, um Motive neu zu zeichnen (siehe unten) |
+| `css/components.css` | die Bausteine (Fenster-Karte, Chips, Zeilen, Knöpfe, Tabs …) |
+| `css/app.css` | Aufbau der Tafel: Reiter, Widgets, Leiste, Dialoge |
+| `styleguide.html` | Stilvorlage zum Nachschauen |
+| `tools/pixel-motive.mjs` | Werkzeug, um Pixel-Motive zu zeichnen |
 
 ---
 
-## 1. Die Regeln des Pixel-Looks
+## 1. Die Regeln
 
-1. **Alles sitzt auf dem Pixel-Raster.** `--px` ist 4 Bildschirmpunkte groß. Abstände, Rahmen und Icon-Größen sind immer ganze Vielfache davon, zum Beispiel `calc(3 * var(--px))`.
-2. **Bilder nur ganzzahlig vergrößern:** 2-fach, 3-fach, 4-fach und so weiter, nie 1,5-fach. Sonst werden die Pixel unscharf. Breite und Höhe im HTML sind deshalb immer *Originalgröße × ganze Zahl*.
-3. **Keine Rundungen** (`border-radius`). Ecken sind treppenförmig.
-4. **Keine weichen Verläufe.** Farben wechseln in harten Stufen, Übergänge sind Schachbrett-Pixel.
-5. **Keine Schatten und keine Unschärfe.**
-6. **Farben nur aus `tokens.css`.** Neue Farben dort anlegen und von dort aus benutzen.
-7. **Deko sparsam einsetzen** und immer mit `alt=""` und `aria-hidden="true"`, damit Screenreader sie überspringen.
+1. **Farben nur aus `tokens.css`.** Nirgends sonst stehen Farbcodes. Neue Farbe? In `tokens.css` anlegen und den Kontrast in `styleguide.html` prüfen.
+2. **Nur die Palette:** die zehn Palettenfarben, Weiß, die beiden Creme-Töne und Tönungen davon (Palettenfarbe mit Weiß gemischt). Einzige Mischfarbe: `--brown` (Koralle + Petrol-dunkel 50 : 50) für Text auf hellem Orange.
+3. **Scharfe Ecken**, kein `border-radius`.
+4. **Weiche Verläufe nur** in der Titelleiste (`.window__titlebar`) und im Hintergrund der Titelkarte (`.window--hero`).
+5. **Dünne Linien** (1–2 px) und **harter, versetzter Schatten** in Orange (`--shadow`), bei kleinen Teilen in Honig (`--shadow-sm`).
+6. **Pixel-Grafik bleibt scharf:** nur ganzzahlig vergrößern (2-fach, 3-fach …), immer mit `image-rendering: pixelated` (Klasse `.pixel`). Nie glätten, nie umfärben, nie mit Bild-KI neu erzeugen.
+7. **Deko** hat `alt=""` und `aria-hidden="true"`.
 
 ---
 
 ## 2. Farben
 
-### Grundfarben
+### Palette
 
-| Name | Farbe | Wofür |
+| Variable | Farbe | Rolle |
 |---|---|---|
-| `--cream` | #FFF7EC | helle Flächen, Schrift auf Dunklem |
-| `--page` | #FFF4E4 | Seitenhintergrund (wird je Stimmung leicht getönt) |
-| `--dot` | #E9D3B8 | Punkte im Punktraster |
-| `--ink` | #3B2418 | Haupttext (Schoko) |
-| `--ink-soft` | #5E4030 | Nebentext |
-| `--terracotta-dark` | #A84A2A | Knöpfe |
+| `--c-petrol-dark` | #264653 | Haupttext, Überschriften, aktiver Reiter/Knopf, Fokusrahmen |
+| `--c-petrol` | #287271 | gedämpfter Text (Unterzeilen, Labels) |
+| `--c-teal` | #2A9D8F | Hinweis-Kasten (gestrichelter Rahmen), Timer-Ring |
+| `--c-sage` | #8AB17D | Verlauf der Titelleiste |
+| `--c-sun` | #E9C46A | Textmarker, Hinweis-Punkt an „Sicherung“ |
+| `--c-honey` | #EFB366 | kleine Schatten, Rahmen der Orange-Chips |
+| `--c-orange` | #F4A261 | großer Schatten, Nummern-Blöcke |
+| `--c-orange-deep` | #EE8959 | Rahmen der Nummern-Blöcke |
+| `--c-coral` | #E76F51 | Akzentrand am aktiven Reiter, Sekundenzeiger, „Zeit ist um“ |
+| `--c-coral-soft` | #E97C61 | Verlauf der Titelkarte, Herz |
+| `--white` | #FFFFFF | Fenster-Karten, Zeilen, Chips |
+| `--cream` | #FCF6E9 | Seitenhintergrund |
+| `--cream-deep` | #F9EED5 | Leiste unten, inaktive Reiter |
 
-### Kartenfarben
+### Tönungen (Zahl = Anteil der Farbe, Rest Weiß)
 
-Jede Karte hat vier Farben: eine dünne **Außenlinie**, einen dicken **Rahmen** (auch der Reiter), eine helle **Füllung** und eine kräftigere Farbe für **gedrückte** Knöpfe.
+`--tint-teal-8` #EEF7F6 · `--tint-teal-10` #EAF5F4 · `--tint-teal-20` #D4EBE9 · `--tint-teal-35` #B4DDD8 (dünne Rahmen) · `--tint-sun-40` #F6E7C3 · `--tint-coral-soft-15` #FCEBE7 · `--tint-orange-20` #FDECDF (Orange-Chips, Hover) · `--tint-orange-40` #FBDAC0 · `--tint-petrol-dark-6` #F2F4F5 (Gitter) · `--tint-petrol-dark-12` #E5E9EA · `--tint-sage-20` #E8EFE5 · `--brown` #875B52 · `--veil` Petrol-dunkel halb durchsichtig (hinter Dialogen)
 
-| Klasse | Name | Rahmen | Füllung |
+### Geprüfte Kontraste
+
+Regel: normaler Text mindestens 4,5 : 1, große oder fette Schrift (ab 24 px bzw. 19 px fett) mindestens 3 : 1.
+
+| Text | Hintergrund | Kontrast | Ergebnis |
 |---|---|---|---|
-| `card--apricot` | Apricot | #E9A06E | #FDEBD8 |
-| `card--sage` | Salbeigrün | #9DBB8E | #EEF4E6 |
-| `card--dusk` | Dämmerblau | #A9ACDA | #EFEFFA |
-| `card--mustard` | Senfgelb | #E3BC55 | #FDF4D9 |
-| `card--rose` | Rosé | #E7A3B2 | #FDEFF2 |
-| `card--warning` | Terrakotta (Achtung) | #E0805E | #FFF0E8 |
+| Petrol-dunkel | Weiß | 10,08 : 1 | ✔ |
+| Petrol-dunkel | Creme | 9,36 : 1 | ✔ |
+| Petrol-dunkel | Creme-tief | 8,74 : 1 | ✔ |
+| Petrol-dunkel | Teal 8 % (Hinweis-Kasten) | 9,25 : 1 | ✔ |
+| Petrol-dunkel | Sonne 40 % (Titelkarte) | 8,23 : 1 | ✔ |
+| Petrol-dunkel | Koralle 15 % (Titelkarte) | 8,72 : 1 | ✔ |
+| Petrol-dunkel | Orange 20 % | 8,76 : 1 | ✔ |
+| Petrol-dunkel | Sonne (Textmarker) | 6,03 : 1 | ✔ |
+| Petrol-dunkel | Honig | 5,43 : 1 | ✔ |
+| Petrol-dunkel | Orange (Nummern-Block) | 4,89 : 1 | ✔ |
+| Petrol | Weiß | 5,62 : 1 | ✔ |
+| Petrol | Creme | 5,22 : 1 | ✔ |
+| Petrol | Creme-tief | 4,88 : 1 | ✔ |
+| Petrol | Teal 8 % | 5,16 : 1 | ✔ |
+| Petrol | Sonne 40 % | 4,59 : 1 | ✔ (knapp) |
+| Petrol | Orange 20 % | 4,88 : 1 | ✔ |
+| Braun | Orange 20 % (Chip, Zähler) | 5,00 : 1 | ✔ |
+| Braun | Weiß | 5,76 : 1 | ✔ |
+| Weiß | Petrol-dunkel (aktiv) | 10,08 : 1 | ✔ |
+| Weiß | Petrol | 5,62 : 1 | ✔ |
+| Weiß | Teal | 3,32 : 1 | nur große, fette Schrift |
+| Weiß | Orange | 2,06 : 1 | ✘ nie verwenden |
+| Koralle | Weiß (Timer „Zeit ist um“, riesige Ziffern) | 3,09 : 1 | ✔ nur große Schrift |
 
-Der Text (Schoko) hat auf allen Rahmen- und Füllfarben mindestens **5 : 1 Kontrast**. Das erfüllt die Regel für gute Lesbarkeit (WCAG AA, mindestens 4,5 : 1).
+Faustregel: **Weiße Schrift nur auf Petrol-dunkel und Petrol**, sonst immer Petrol-dunkel.
 
-### So änderst du eine Farbe
-
-Öffne `css/tokens.css`, suche die Zeile, zum Beispiel `.card--sage { … }`, und ändere die Farbcodes. Prüfe danach den Kontrast, zum Beispiel mit einem Online-Kontrastprüfer: Text #3B2418 auf deiner neuen Farbe sollte mindestens 4,5 : 1 haben.
-
----
-
-## 3. Die Bausteine
-
-### Karte mit Reiter
-
-```html
-<article class="card card--sage">
-  <h3 class="card-tab">
-    <img class="card-tab__icon" src="assets/icons/wecker.svg" width="28" height="28" alt="">
-    <span>Titel der Karte</span>
-  </h3>
-  <div class="card-body px-box">
-    <p>Hier kommt dein Text.</p>
-  </div>
-</article>
-```
-
-- Die Farbe steckt in `card--sage`. Tausch sie gegen eine andere Kartenfarbe.
-- Das Icon ist frei wählbar, alle Icons liegen in `assets/icons/`. Icons immer **28 × 28** (2-fach).
-- In einem Abschnitt mit zwei Spalten wird die letzte Karte automatisch breit, wenn sie allein übrig bleibt. Mit `is-wide` an der Karte wird sie immer breit.
-
-### Etikett im Reiter (für Zeiten, Mengen, Seitenzahlen)
-
-```html
-<h3 class="card-tab">… <span>Titel</span> <span class="badge">ca. 5 Min.</span></h3>
-```
-
-### Hervorgehobener Kasten
-
-Er ist Rosé, hat einen größeren Reiter und kleine Eck-Markierungen innen.
-
-```html
-<aside class="card card--rose card--highlight">
-  <h2 class="card-tab"><img class="card-tab__icon" src="assets/icons/herz.svg" width="28" height="28" alt=""><span>Das Wichtigste</span></h2>
-  <div class="card-body px-box has-marks">
-    <ul class="icon-list">
-      <li><img src="assets/icons/info.svg" width="28" height="28" alt=""><span><strong>Punkt.</strong> Erklärung.</span></li>
-    </ul>
-  </div>
-</aside>
-```
-
-`has-marks` funktioniert an jedem `px-box`-Kasten.
-
-### Aufzählung mit Pixel-Aufzählungszeichen
-
-Zwischen den Punkten erscheinen automatisch gestrichelte Pixel-Linien.
-
-```html
-<ul class="pixel-list">
-  <li><img src="assets/deko/funkel.svg" width="20" height="20" alt=""><span>Erster Punkt</span></li>
-  <li><img src="assets/deko/funkel.svg" width="20" height="20" alt=""><span>Zweiter Punkt</span></li>
-</ul>
-```
-
-### Hinweis mit großem Icon
-
-```html
-<div class="card-body px-box note">
-  <img class="note__icon" src="assets/icons/info.svg" width="56" height="56" alt="">
-  <div><p>Text des Hinweises.</p></div>
-</div>
-```
-
-### Pixelbild in einer Karte
-
-```html
-<img class="pixel-image" src="assets/deko/wolke.svg" width="112" height="64" alt="Pixel-Wölkchen">
-```
-
-Breite und Höhe sind immer **Originalgröße × ganze Zahl**. Die Wolke ist 14 × 8 Pixel groß, 8-fach ergibt das 112 × 64.
-
-### Knöpfe
-
-```html
-<button type="button" class="button">Los geht’s</button>
-<button type="button" class="button button--light">Lieber nicht</button>
-```
-
-### Deko neben einem Reiter
-
-Die Deko kommt als erstes Element in die Karte, also *vor* den Reiter:
-
-```html
-<img class="deco--tab-right" src="assets/deko/herz.svg" width="36" height="30" alt="" aria-hidden="true">
-<img class="deco--tab-right-2" src="assets/deko/funkel.svg" width="20" height="20" alt="" aria-hidden="true">
-```
-
-### Kopfkarte und Fußleiste
-
-Beide stehen schon in `index.html`. Ändere einfach die Texte. In der Kopfkarte kannst du das Bild links gegen ein eigenes Pixelbild tauschen (ganzzahlig vergrößert).
+Der Titel in der Titelleiste steht auf einem kleinen cremefarbenen Schild, weil dunkle Schrift direkt auf dem Türkis am Anfang des Verlaufs nur etwa 3 : 1 hätte.
 
 ---
 
-## 4. Toggle und Abschnitte
+## 3. Schriften
 
-Jeder Knopf im Toggle zeigt einen Abschnitt (`<section class="panel">`). Die Verbindung entsteht über diese Angaben:
+| Rolle | Schrift | Variable |
+|---|---|---|
+| Überschriften | Source Sans 3, 800, eng (`letter-spacing: -0.03em`, Zeilenhöhe 1,05) | `--font-sans`, Klasse `.heading` |
+| Fließtext (mind. 16 px) | Source Sans 3, 400 | `--font-sans` |
+| Labels, Chips, Dateinamen | JetBrains Mono, fett, Großbuchstaben, weiter Abstand | `--font-mono`, Klasse `.label` |
 
-| Am Knopf | Bedeutung |
-|---|---|
-| `data-mood="morgen"` | Name des Abschnitts. Er bestimmt auch die Hintergrund-Tönung. |
-| `aria-controls="panel-morgen"` | die `id` des Abschnitts, den der Knopf zeigt |
-| `id="tab-morgen"` | wird im Abschnitt bei `aria-labelledby` wieder genannt |
-| `data-sky="abend"` (optional) | welcher Himmel erscheint, falls er anders heißt als der Abschnitt |
-| Farbklasse, z. B. `card--sage` | Farbe des Knopfs |
-
-Bedienung per Tastatur: **Tab** springt zum Toggle, mit den **Pfeiltasten** wechselst du den Abschnitt, **Pos1** und **Ende** springen zum ersten und letzten Abschnitt.
-
-### Neuen Tab hinzufügen (Schritt für Schritt)
-
-1. Einen Knopf in `<div class="toggle__list">` dazuschreiben:
-   ```html
-   <button class="toggle__button card--mustard" role="tab" id="tab-pause" aria-controls="panel-pause"
-           aria-selected="false" tabindex="-1" data-mood="pause" data-sky="mittag">
-     <img class="toggle__icon" src="assets/icons/wecker.svg" width="28" height="28" alt=""><span>Pause</span>
-   </button>
-   ```
-2. Einen passenden Abschnitt in `<main>` dazuschreiben:
-   ```html
-   <section class="panel" role="tabpanel" id="panel-pause" aria-labelledby="tab-pause" hidden>
-     … Karten …
-   </section>
-   ```
-3. Fertig. Die Knöpfe teilen sich die Breite automatisch.
-
-Ein eigener Himmel ist optional. Ohne eigenen Himmel nimmst du mit `data-sky` einen vorhandenen. Für einen neuen Himmel: in `tokens.css` eine Zeile `[data-sky="pause"] { --sky-1: …; … --sky-6: …; }` anlegen und in `index.html` eine `<div class="sky__layer" data-sky="pause">` dazuschreiben. Die Tönung der Seite legst du mit `body[data-mood="pause"] { --page: …; --dot: …; }` fest.
-
-### Vorwahl nach Uhrzeit (optional)
-
-Am `<nav class="toggle">` steht:
-
-```html
-data-auto-time="morgen 4-11, mittag 11-17, abend 17-4"
-```
-
-Das heißt: Von 4 bis 11 Uhr wird beim Öffnen „morgen“ gezeigt, von 11 bis 17 Uhr „mittag“ und so weiter. Möchtest du das nicht, lösch die Angabe einfach. Dann startet die Seite mit dem Knopf, der `aria-selected="true"` hat.
-
-Zum Ausprobieren kannst du eine Stimmung direkt aufrufen: `index.html?stimmung=abend`.
+Beide liegen als Dateien in `assets/fonts/` (Lizenz OFL). Es wird nichts aus dem Internet geladen.
 
 ---
 
-## 5. Der Pixel-Himmel
+## 4. Die Bausteine
 
-- 6 Farbbänder pro Stimmung (`--sky-1` oben bis `--sky-6` unten), festgelegt in `tokens.css`.
-- An jeder Grenze liegt ein Schachbrett-Streifen aus beiden Farben, jedes Kästchen ist genau 1 `--px`.
-- Unten läuft der Himmel in Punkten ins Papier aus.
-- Beim Umschalten blenden die Himmel weich ineinander über. Bei „Bewegung reduzieren“ im Gerät passiert das sofort.
-- Sonne, Wolken, Mond und Sterne sind `<img class="sky__deco">` im oberen Streifen. Ihre Lage steht direkt im HTML (`style="left: …; top: …"`).
+Alle Beispiele siehst du in `styleguide.html`. Dort kannst du den HTML-Code abschauen.
+
+| Klasse | Was | Wo in der Tafel |
+|---|---|---|
+| `.header-strip` + `.label` + `.counter` | Kopfzeile: Label links, Zähler „01 / 08“ rechts | Label mit dem Kursnamen ganz oben; Zähler später im Folien-Widget |
+| `.window` | Fenster-Karte: weiß, dünner Rahmen, oranger Schatten | jedes Widget, jeder Dialog |
+| `.window__titlebar`, `.window__title`, `.window__tools`, `.window__buttons` | Titelleiste mit Verlauf, Titel-Schild mit Icon, Werkzeug und drei Deko-Knöpfen | Kopf jedes Widgets |
+| `.window__body` | Innenfläche | Dialoge |
+| `.window--hero` | Titelkarte mit zartem Verlauf und Gitter | Stilvorlage |
+| `.chip`, `.chip--peach` | Tag-Chip (weiß) und Meta-Chip (helles Orange) | später z. B. Gruppen, Folien |
+| `mark` | Textmarker (untere Hälfte der Zeile in Sonne) | Text-Widget |
+| `.rows` / `.row` / `.row__icon` / `.row__num` | Listenzeilen mit Icon- oder Nummern-Block | später Schülerliste, Gruppen |
+| `.callout` | Hinweis-Kasten, gestrichelt | „Tippe unten auf ein Widget …“ |
+| `.btn`, `.btn--primary`, `.btn--square`, `.btn--small` | Knöpfe | überall |
+| `.tab` | Reiter (aktiv: Petrol-dunkel mit Korallen-Rand) | Stilvorlage; die Kurs-Reiter nutzen `.reiter` mit demselben Aussehen |
+| `.choice` | Auswahl als Knopfreihe (Radio-Knöpfe) | Einstellungen, Lehrer:in-Auswahl |
+| `.teacher-overlap`, `.sprite` | Figur, die über den Kartenrand ragt, und kleine Sprites | Stilvorlage |
 
 ---
 
-## 6. Deko-Motive und Icons
+## 5. Die Lehrer:in-Figur
+
+- Bilder: `assets/teacher/lehrerin-<stimmung>.png`, je 84 × 160 Pixel, durchsichtiger Hintergrund. Die Liste steht in `assets/teacher/teacher.js`.
+- Auf der Tafel steht die Figur **frei**, ohne Fenster. Die Stimmung wählst du beim Hinzufügen. Antippen zeigt den Mülleimer.
+- Größe immer ganzzahlig: 84 × 160 mal 2, 3, 4 … (auch auf Retina-Bildschirmen).
+- Kleine Sprites (Ausrufezeichen, Fragezeichen, Herz) stehen pro Stimmung in `teacher.js` (`sprites`, Lage in Figur-Pixeln).
+- Die Figur behält ihre eigenen Farben und folgt nicht der Palette.
+
+---
+
+## 6. Icons und Sprites
 
 | Ordner | Motive | Größe (Pixel) |
 |---|---|---|
-| `assets/deko/` | stern, funkel, herz, wolke, sonne, mond | 9×9, 5×5, 12×10, 14×8, 12×12, 12×12 |
-| `assets/icons/` | sonne-auf, sonne, mond, wecker, herz, info, verbot, waage, zahnrad, teller | alle 14×14 |
+| `assets/icons/` | wuerfel, bild, text, uhr, kalender, folien, herz, zahnrad, muell, stift, start, pause, stopp, vollbild, speichern, laden, pfeil-links, pfeil-rechts, kreuz, info, wecker, sonne, mond, sonne-auf, verbot, waage, teller | alle 14 × 14, angezeigt 14, 28 oder 56 px |
+| `assets/deko/` | ausrufe, frage, herz | 5 × 14, 9 × 13, 12 × 10 |
 
-**Eigenes Motiv zeichnen:** Öffne `tools/pixel-motive.mjs`. Jedes Motiv ist dort eine kleine Pixelkarte: eine Zeile pro Pixelreihe, ein Buchstabe pro Pixel, `.` ist durchsichtig, die Farben stehen oben bei `FARBE`. Füge eine Karte hinzu, trag den Namen bei `DEKO` oder `ICONS` ein und führe den Befehl aus:
+Die Icons sind in Palettenfarben gezeichnet, mit Kontur in Petrol-dunkel.
+
+**Eigenes Motiv zeichnen:** Öffne `tools/pixel-motive.mjs`. Jedes Motiv ist dort eine kleine Pixelkarte: eine Zeile pro Pixelreihe, ein Buchstabe pro Pixel, `.` ist durchsichtig. Die Farben stehen oben bei `FARBE`, und zwar nur Werte aus `tokens.css`. Füge eine Karte hinzu, trag den Namen bei `DEKO` oder `ICONS` ein und führe den Befehl aus:
 
 ```
 node tools/pixel-motive.mjs
 ```
 
-Dafür brauchst du Node.js. Du kannst auch Claude Code darum bitten.
-
 ---
 
 ## 7. Barrierefreiheit
 
-- Text hat überall mindestens 5 : 1 Kontrast.
-- Alles lässt sich per Tastatur bedienen. Der Fokus ist als dunkler Rahmen sichtbar, bei Knöpfen innen.
-- Deko hat `alt=""` und `aria-hidden="true"`. Bilder mit Inhalt brauchen einen Alt-Text, der beschreibt, was zu sehen ist.
-- „Bewegung reduzieren“ im Gerät schaltet Überblendungen und Animationen ab.
+- Alle Textfarben erfüllen die Kontrast-Regeln (Tabelle oben).
+- Alles lässt sich per Tastatur bedienen. Der Fokus ist ein 3 px breiter Rahmen in Petrol-dunkel, auf dunklen Flächen in Weiß.
+- Knöpfe sind mindestens 44–48 px groß, damit sie am iPad gut zu treffen sind.
+- Deko hat `alt=""` und `aria-hidden="true"`. Die Figur hat einen kurzen Alt-Text zur Stimmung.
+- „Bewegung reduzieren“ im Gerät schaltet Animationen ab (auch das Blinken des Timers).

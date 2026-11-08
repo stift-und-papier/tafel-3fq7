@@ -12,3 +12,9 @@ desktop.ini
 
 # Lokale Werkzeug-Einstellungen
 .claude/
+
+# Referenz-Screenshots (Ordnername ohne -en)
+referenz/
+
+# Sicherungsdateien der Tafel: enthalten Schülerkürzel, nie hochladen
+tafel-sicherung-*.json

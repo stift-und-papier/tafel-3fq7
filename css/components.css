@@ -1,358 +1,271 @@
 /* ============================================================
-   BAUSTEINE (Komponenten)
-   Alle Werte kommen aus tokens.css. Hier steht nur, WIE etwas
-   aussieht – nicht in welcher Farbe.
+   BAUSTEINE (Design v2 „Retro-Fenster“)
+   Dünne Linien, scharfe Ecken (kein border-radius), harter Versatzschatten.
+   Weiche Verläufe NUR in .window__titlebar und .window--hero.
+   Alle Farben über Variablen aus tokens.css. Übersicht: styleguide.html
    ============================================================ */
 
+/* ---------- Grundlagen ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: var(--font-text);
-  font-size: var(--size-text);
-  line-height: 1.55;
-  color: var(--ink);
-  overflow-x: hidden;
-  /* Creme mit feinem Punktraster (ein Punkt pro 4×4 Pixel-Kästchen) */
-  background-color: var(--page);
-  background-image: conic-gradient(from 270deg at var(--line) var(--line), var(--dot) 0 90deg, transparent 90deg);
-  background-size: calc(4 * var(--px)) calc(4 * var(--px));
-}
-
-h1, h2, h3 {
-  font-family: var(--font-pixel);
-  font-weight: 700;
-  line-height: 1.15;
-  margin: 0;
-}
-
-strong { font-weight: 800; }
-
-/* Alle Pixelbilder: nur ganzzahlig skalieren, nie glätten */
-img { image-rendering: pixelated; }
-
-/* ============================================================
-   PIXEL-KASTEN: Außenlinie + dicker Rahmen + helle Füllung,
-   Ecken treppenförmig. Drei Ebenen: Kasten selbst, ::before, ::after.
-   Benutzt von Karten, Kopfkarte, Toggle-Knöpfen und Knöpfen.
-   ============================================================ */
-.px-box,
-.toggle__button,
-.button {
-  position: relative;
-  isolation: isolate;
-  background: var(--outline);
-  clip-path: var(--stairs);
-}
-.px-box::before, .px-box::after,
-.toggle__button::before, .toggle__button::after,
-.button::before, .button::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  clip-path: var(--stairs);
-}
-.px-box::before, .toggle__button::before, .button::before {
-  inset: var(--line);
-  background: var(--frame);
-}
-.px-box::after, .toggle__button::after, .button::after {
-  inset: calc(var(--line) + var(--border));
-  background: var(--fill);
-}
-.px-box { padding: calc(var(--line) + var(--border) + 4 * var(--px)); }
-
-/* Kleine Eck-Markierungen innen (wie Fotoecken) */
-.has-marks::after {
-  --a: calc(2 * var(--px));
-  --l: calc(3 * var(--px));
-  background:
-    linear-gradient(var(--frame) 0 0) left var(--a) top var(--a) / var(--l) var(--px),
-    linear-gradient(var(--frame) 0 0) left var(--a) top var(--a) / var(--px) var(--l),
-    linear-gradient(var(--frame) 0 0) right var(--a) top var(--a) / var(--l) var(--px),
-    linear-gradient(var(--frame) 0 0) right var(--a) top var(--a) / var(--px) var(--l),
-    linear-gradient(var(--frame) 0 0) left var(--a) bottom var(--a) / var(--l) var(--px),
-    linear-gradient(var(--frame) 0 0) left var(--a) bottom var(--a) / var(--px) var(--l),
-    linear-gradient(var(--frame) 0 0) right var(--a) bottom var(--a) / var(--l) var(--px),
-    linear-gradient(var(--frame) 0 0) right var(--a) bottom var(--a) / var(--px) var(--l),
-    var(--fill);
-  background-repeat: no-repeat;
-}
-
-/* Fokus: Umrisse würden von den Treppen-Ecken abgeschnitten, darum bei Knöpfen ein Ring innen */
-:focus-visible { outline: var(--px) solid var(--ink); outline-offset: var(--px); }
-:is(.toggle__button, .button):focus-visible { outline: none; }
-:is(.toggle__button, .button):focus-visible::after {
-  box-shadow: inset 0 0 0 var(--px) var(--ink), inset 0 0 0 calc(2 * var(--px)) var(--cream);
-}
-
-/* ============================================================
-   SEITENAUFBAU
-   ============================================================ */
 .page {
-  position: relative;
-  max-width: var(--page-width);
-  margin: 0 auto;
-  --top: calc(14 * var(--px));   /* oben ein Stück Himmel mit Sonne/Mond sichtbar */
-  padding: var(--top) calc(4 * var(--px)) 0;
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--cream);
+  color: var(--text);
+  font: 400 var(--size-text)/1.5 var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+}
+/* feines Gitter, das nach unten ausblendet */
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--grid-line) var(--hair), transparent var(--hair)) 0 0 / var(--grid-size) var(--grid-size),
+    linear-gradient(90deg, var(--grid-line) var(--hair), transparent var(--hair)) 0 0 / var(--grid-size) var(--grid-size);
+  -webkit-mask-image: linear-gradient(to bottom, var(--white), transparent 85%);
+  mask-image: linear-gradient(to bottom, var(--white), transparent 85%);
 }
 
-/* ---------- Kopfkarte ---------- */
-.header-card {
-  display: grid;
-  justify-items: center;
-  gap: calc(2 * var(--px));
-  text-align: center;
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+.pixel { image-rendering: pixelated; image-rendering: crisp-edges; }
+
+/* ---------- Schrift-Rollen ---------- */
+.heading {
+  margin: 0;
+  font: 800 var(--size-heading)/1.05 var(--font-sans);
+  letter-spacing: -.03em;
+  color: var(--text);
 }
-.header-card.px-box { padding-top: calc(var(--line) + var(--border) + 3 * var(--px)); }
-.header-card__image { display: block; }
-.header-card__title {
-  font-size: var(--size-title);
-  color: var(--ink);
-  letter-spacing: .01em;
-}
-.header-card__subtitle {
-  max-width: 34em;
-  margin: calc(2 * var(--px)) 0 0;
-  color: var(--ink-soft);
-  font-size: 1.1rem;
-}
-@media (min-width: 760px) {
-  .header-card {
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    justify-items: start;
-    gap: calc(8 * var(--px));
-    text-align: left;
-    padding-right: calc(18 * var(--px));
-  }
+.heading--small { font-size: clamp(1.5rem, 2.6vw, 2rem); }
+.lead { margin: 0; color: var(--text-muted); font-size: 1.1875rem; }
+.label {
+  font: 700 var(--size-label)/1.2 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  color: var(--text-muted);
 }
 
-/* ---------- Toggle: Pixel-Knöpfe, so viele wie im HTML stehen ---------- */
-.toggle {
-  position: sticky;
-  top: calc(2 * var(--px));
-  z-index: 10;
-  margin: calc(6 * var(--px)) auto;
-  max-width: 640px;
+/* Textmarker: füllt nur die untere Hälfte der Zeile */
+mark, .mark {
+  color: inherit;
+  background: linear-gradient(transparent 55%, var(--mark) 55%);
+  padding: 0 .1em;
 }
-.toggle__list {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  gap: calc(3 * var(--px));
-}
-.toggle__button {
-  appearance: none;
-  border: 0;
-  cursor: pointer;
-  min-height: calc(16 * var(--px));
-  color: var(--ink);
-  font: 700 var(--size-toggle)/1 var(--font-pixel);
+
+/* ---------- Kopfzeile über einer Karte: Label links, Zähler rechts ---------- */
+.header-strip {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: calc(2 * var(--px));
-  padding: 0 calc(3 * var(--px)) var(--px);
+  justify-content: space-between;
+  gap: var(--gap);
+  margin-bottom: calc(var(--gap) * 1.25);
 }
-/* nicht gedrückt: unten eine dunklere Kante (Knopf steht hoch) */
-.toggle__button::after { bottom: calc(var(--line) + 2 * var(--border)); }
-.toggle__icon { width: calc(7 * var(--px)); height: calc(7 * var(--px)); flex: none; }
-.toggle__button:hover::after { background: var(--pressed); }
-/* gedrückt: Knopf sitzt eine Pixelreihe tiefer, Kante weg, Füllung kräftiger */
-.toggle__button[aria-selected="true"] {
-  transform: translateY(var(--px));
-  padding-bottom: 0;
-}
-.toggle__button[aria-selected="true"]::after {
-  bottom: calc(var(--line) + var(--border));
-  background: var(--pressed);
-}
-.toggle__button[aria-selected="true"] span {
-  text-decoration: underline;
-  text-decoration-thickness: var(--line);
-  text-underline-offset: var(--px);
+.counter {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--tint-orange-20);
+  border: var(--hair) solid var(--c-honey);
+  box-shadow: var(--shadow-sm);
+  font: 700 var(--size-label)/1.2 var(--font-mono);
+  letter-spacing: .12em;
+  color: var(--brown);
+  white-space: nowrap;
 }
 
-/* ---------- Abschnitte (Inhalt je Toggle-Knopf) im Raster ---------- */
-.panel {
-  display: grid;
-  gap: calc(6 * var(--px));
-  animation: fade-in .45s ease;
-}
-@media (min-width: 760px) {
-  .panel { grid-template-columns: 1fr 1fr; }
-  /* bleibt am Ende eine Karte allein übrig, wird sie breit */
-  .panel > .card:last-child:nth-child(odd), .is-wide { grid-column: 1 / -1; }
-}
-.panel[hidden] { display: none; }
-@keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-/* ---------- Karte: Reiter + Kasten ---------- */
-.card {
+/* ---------- Fenster-Karte ---------- */
+.window {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  background: var(--white);
+  border: var(--frame-width) solid var(--line-color);
+  box-shadow: var(--shadow);
 }
-.card-body { flex: 1; }
-.card-body > :first-child { margin-top: 0; }
-.card-body p { margin: calc(3 * var(--px)) 0 0; }
-
-/* ---------- Reiter: wächst oben links aus dem Kartenrahmen ---------- */
-.card-tab {
-  position: relative;
-  z-index: 1;
-  isolation: isolate;
-  align-self: flex-start;
-  max-width: calc(100% - 6 * var(--px));
-  margin: 0 0 calc(-1 * (var(--line) + var(--border))) calc(3 * var(--px));
-  padding: calc(var(--line) + var(--border) + 2 * var(--px)) calc(var(--line) + 4 * var(--px)) calc(3 * var(--px));
+.window__titlebar {
+  flex: none;
   display: flex;
   align-items: center;
-  gap: calc(2 * var(--px));
-  font-size: var(--size-tab);
-  line-height: 1.2;
-  /* Außenlinie nur oben und an den Seiten; unten geht der Reiter in den Rahmen über */
-  background: linear-gradient(var(--outline) 0 0) top / 100% calc(100% - var(--line) - var(--border)) no-repeat;
-  clip-path: var(--stairs-top);
+  gap: 8px;
+  min-height: 40px;
+  padding: 6px 8px;
+  background: var(--titlebar);
+  border-bottom: var(--frame-width) solid var(--line-color);
 }
-.card-tab::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: var(--line) var(--line) 0;
-  background: var(--frame);
-  clip-path: var(--stairs-top);
-}
-.card-tab__icon { width: calc(7 * var(--px)); height: calc(7 * var(--px)); flex: none; }
-
-/* Hervorgehobener Kasten: Rosé, größerer Reiter, Eck-Markierungen */
-.card--highlight .card-tab { font-size: 1.4rem; }
-
-/* ---------- Deko-Pixel neben den Reitern (sparsam) ---------- */
-.deco--tab-right, .deco--tab-right-2 { position: absolute; z-index: 2; pointer-events: none; }
-.deco--tab-right   { top: calc(2 * var(--px)); right: calc(4 * var(--px)); }
-.deco--tab-right-2 { top: calc(5 * var(--px)); right: calc(15 * var(--px)); }
-.card:has(> .deco--tab-right) > .card-tab { max-width: calc(100% - 22 * var(--px)); }
-
-/* ---------- Etikett (z. B. Mengen, Zeiten) ---------- */
-.badge {
-  display: inline-block;
-  flex: none;
-  white-space: nowrap;
-  padding: var(--px) calc(2 * var(--px));
-  background: var(--ink);
-  color: var(--cream);
-  font: 800 .95rem/1.1 var(--font-text);   /* Systemschrift: Zahlen besser lesbar als in Pixelschrift */
-  clip-path: polygon(var(--line) 0, calc(100% - var(--line)) 0, calc(100% - var(--line)) var(--line), 100% var(--line), 100% calc(100% - var(--line)), calc(100% - var(--line)) calc(100% - var(--line)), calc(100% - var(--line)) 100%, var(--line) 100%, var(--line) calc(100% - var(--line)), 0 calc(100% - var(--line)), 0 var(--line), var(--line) var(--line));
-}
-
-/* ---------- Pixelbild in einer Karte: nie krumm skalieren ---------- */
-.pixel-image {
-  display: block;
-  max-width: none;
-  margin: 0 auto calc(2 * var(--px));
-}
-
-/* ---------- Listen ---------- */
-/* Gestrichelte Trennlinie (Pixel-Striche) zwischen Listenpunkten */
-.pixel-list li + li,
-.icon-list li + li {
-  background: linear-gradient(90deg, var(--frame) 50%, transparent 0) top left / calc(2 * var(--px)) var(--line) repeat-x;
-}
-
-/* Aufzählung mit Pixel-Aufzählungszeichen (<img> vor dem Text) */
-.pixel-list {
-  margin: calc(3 * var(--px)) 0 0;
-  padding: 0;
-  list-style: none;
-}
-.pixel-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: calc(2 * var(--px));
-  padding: calc(2 * var(--px)) 0;
-}
-.pixel-list li > img { flex: none; margin-top: calc(var(--px) / 2); }
-.pixel-list li > span { flex: 1; }
-
-/* Liste mit großem Icon pro Punkt (wie im hervorgehobenen Kasten) */
-.icon-list {
-  list-style: none;
+/* heller Untergrund hinter Icon und Titel, damit der Text auf dem Verlauf lesbar bleibt */
+.window__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
   margin: 0;
-  padding: 0;
+  padding: 3px 8px;
+  background: var(--cream);
+  border: var(--hair) solid var(--c-petrol-dark);
+  font: 700 var(--size-label)/1.2 var(--font-mono);
+  letter-spacing: .06em;
+  color: var(--text);
 }
-.icon-list li {
-  display: flex;
-  gap: calc(3 * var(--px));
-  align-items: flex-start;
-  padding: calc(3 * var(--px)) 0;
+.window__title > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.window__title img { flex: none; width: 14px; height: 14px; }
+.window__tools { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+/* drei dekorative Fenster-Knöpfe */
+.window__buttons { display: flex; gap: 4px; }
+.window__buttons i {
+  width: 14px;
+  height: 14px;
+  background: var(--white);
+  border: var(--frame-width) solid var(--c-petrol-dark);
 }
-.icon-list li:first-child { padding-top: 0; }
-.icon-list li:last-child { padding-bottom: 0; }
-.icon-list li > img { flex: none; width: calc(7 * var(--px)); height: calc(7 * var(--px)); }
+.window__body { flex: 1; min-height: 0; padding: 28px 32px 32px; display: flex; flex-direction: column; gap: 20px; }
 
-/* ---------- Hinweis: großes Icon links, Text rechts ---------- */
-.note { display: flex; gap: calc(4 * var(--px)); align-items: flex-start; }
-.note > div { flex: 1; }
-.note p { margin: 0; }
-.note p + p { margin-top: calc(2 * var(--px)); }
-.note__icon { flex: none; width: calc(14 * var(--px)); height: calc(14 * var(--px)); }
-
-/* ---------- Knopf ---------- */
-.button {
-  --outline: #5E2512; --frame: var(--terracotta-dark); --fill: var(--terracotta-dark);
-  appearance: none;
-  border: 0;
-  cursor: pointer;
-  min-height: calc(14 * var(--px));
-  padding: 0 calc(5 * var(--px));
-  color: var(--cream);
-  font: 700 1.2rem/1 var(--font-pixel);
-}
-.button:hover::after { background: #8F3D20; }
-.button--light { --frame: var(--terracotta-dark); --fill: var(--cream); color: var(--terracotta-dark); }
-.button--light:hover::after { background: #FCE5CF; }
-
-/* ---------- Fußleiste über die ganze Breite ---------- */
-.footer-bar {
-  margin: calc(10 * var(--px)) calc(50% - 50vw) 0;
-  padding: calc(var(--line) + var(--border) + 3 * var(--px)) calc(4 * var(--px)) calc(3 * var(--px));
-  text-align: center;
+/* Variante A: Titelkarte mit zartem Verlauf und Gitter */
+.window--hero .window__body {
   background:
-    linear-gradient(var(--outline) 0 0) top / 100% var(--line) no-repeat,
-    linear-gradient(var(--frame) 0 0) 0 var(--line) / 100% var(--border) no-repeat,
-    var(--fill);
-}
-.footer-bar p {
-  margin: 0;
-  font: 400 1.05rem/1.4 var(--font-pixel);
+    linear-gradient(var(--tint-petrol-dark-6) var(--hair), transparent var(--hair)) 0 0 / var(--grid-size) var(--grid-size),
+    linear-gradient(90deg, var(--tint-petrol-dark-6) var(--hair), transparent var(--hair)) 0 0 / var(--grid-size) var(--grid-size),
+    var(--hero-bg);
 }
 
-/* ============================================================
-   HANDY
-   ============================================================ */
-@media (max-width: 480px) {
-  .px-box { padding: calc(var(--line) + var(--border) + 3 * var(--px)); }
-  .toggle__button { flex-direction: column; gap: var(--px); font-size: 1.05rem; }
-  .card-tab { font-size: 1.15rem; }
-  .note { flex-direction: column; gap: calc(2 * var(--px)); }
+/* ---------- Chips ---------- */
+.chip-list { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 5px 10px;
+  background: var(--white);
+  border: var(--hair) solid var(--line-color);
+  font: 700 var(--size-label)/1.2 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text-muted);
+}
+.chip img { flex: none; width: 14px; height: 14px; }
+.chip--peach { background: var(--tint-orange-20); border-color: var(--c-honey); color: var(--brown); }
+
+/* ---------- Listenzeilen und Nummern-Zeilen ---------- */
+.rows { display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--white);
+  border: var(--hair) solid var(--line-color);
+  box-shadow: 3px 3px 0 var(--tint-teal-20);
+}
+.row__icon, .row__num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  background: var(--tint-orange-20);
+  border: var(--hair) solid var(--c-honey);
+  box-shadow: 3px 3px 0 var(--c-orange);
+}
+.row__icon img { width: 28px; height: 28px; }
+.row__num { background: var(--c-orange); border-color: var(--c-orange-deep); font: 700 1.125rem/1 var(--font-mono); color: var(--text); }
+.row__title { margin: 0; font-weight: 700; font-size: 1.1875rem; line-height: 1.25; }
+.row__text { margin: 0; color: var(--text-muted); }
+
+/* ---------- Hinweis-Kasten ---------- */
+.callout {
+  padding: 14px 18px;
+  background: var(--tint-teal-8);
+  border: var(--frame-width) dashed var(--c-teal);
+  font-weight: 700;
+  font-size: 1.1875rem;
+  color: var(--text);
 }
 
-/* ============================================================
-   WENIGER BEWEGUNG, wenn im Gerät so eingestellt
-   ============================================================ */
+/* ---------- Knöpfe ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  min-width: 48px;
+  padding: 0 18px;
+  background: var(--white);
+  border: var(--frame-width) solid var(--c-petrol-dark);
+  box-shadow: var(--shadow-sm);
+  font: 700 1.0625rem/1 var(--font-sans);
+  color: var(--text);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover { background: var(--tint-orange-20); }
+.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--shadow-small); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn img { width: 28px; height: 28px; }
+.btn--primary { background: var(--active-bg); color: var(--active-text); border-color: var(--active-bg); box-shadow: var(--shadow); }
+.btn--primary:hover { background: var(--c-petrol); border-color: var(--c-petrol); }
+.btn--primary:active { box-shadow: 3px 3px 0 var(--shadow-color); }
+.btn--square { padding: 0; width: 48px; }
+.btn--small { min-height: 32px; min-width: 32px; padding: 0 8px; box-shadow: none; border-width: var(--hair); }
+.btn--small img { width: 14px; height: 14px; }
+
+/* ---------- Tabs und Auswahl-Knöpfe ---------- */
+.tabs { display: flex; gap: 6px; }
+.tab {
+  min-height: 48px;
+  padding: 0 18px;
+  background: var(--cream-deep);
+  border: var(--hair) solid var(--line-color);
+  border-bottom-width: 4px;
+  font: 700 1.0625rem/1 var(--font-sans);
+  color: var(--text);
+  cursor: pointer;
+}
+.tab:hover { background: var(--tint-orange-20); }
+.tab.is-active, .tab[aria-selected="true"] {
+  background: var(--active-bg);
+  color: var(--active-text);
+  border-color: var(--active-bg);
+  border-bottom-color: var(--active-accent);
+}
+
+/* Auswahl (Radio-Knöpfe, z. B. Digital | Analog) */
+.choice { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; border: 0; }
+.choice legend { margin-bottom: 8px; padding: 0; }
+.choice label { position: relative; }
+.choice input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.choice span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 16px;
+  background: var(--white);
+  border: var(--frame-width) solid var(--line-color);
+  font-weight: 700;
+}
+.choice label:hover span { background: var(--tint-orange-20); }
+.choice input:checked + span { background: var(--active-bg); color: var(--active-text); border-color: var(--active-accent); }
+.choice input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* ---------- Lehrer:in-Figur, ragt über den Kartenrand ---------- */
+/* Größe immer ganzzahlig (84 × 160 × k) – setzt das Skript oder die Klasse */
+.teacher-overlap {
+  position: absolute;
+  right: 24px;
+  bottom: -40px;
+  z-index: 2;
+  width: 168px;
+  height: 320px;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+.sprite { position: absolute; z-index: 3; pointer-events: none; image-rendering: pixelated; }
+
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
-  }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

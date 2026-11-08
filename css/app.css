@@ -1,0 +1,352 @@
+/* ============================================================
+   TAFEL-APP – Seitenaufbau, Kurs-Reiter, Tafel mit Widgets,
+   Widget-Leiste, Dialoge und die einzelnen Widgets.
+   Farben aus tokens.css, Bausteine (.window, .btn, .choice …) aus components.css.
+   ============================================================ */
+
+html, body { height: 100%; }
+body { overflow: hidden; overscroll-behavior: none; }
+button, label.btn { touch-action: manipulation; }   /* kein Doppeltipp-Zoom am iPad */
+.unsichtbar { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* Ganze Seite: oben Label und Reiter, Mitte Tafel, unten Leiste */
+.app {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.app__strip { flex: none; margin: 0; padding: 12px 20px 0; }
+
+/* ============================================================
+   KURS-REITER (Tabs)
+   ============================================================ */
+.kopf {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px 12px;
+}
+.reiter-liste {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 0 4px 4px 0;
+  scrollbar-width: none;
+}
+.reiter-liste::-webkit-scrollbar { display: none; }
+
+.reiter {
+  flex: 1 1 auto;
+  min-width: 96px;   /* passen nicht alle hinein, lässt sich die Reihe wischen */
+  display: flex;
+  align-items: center;
+  background: var(--cream-deep);
+  border: var(--hair) solid var(--line-color);
+  border-bottom: 4px solid var(--line-color);
+  color: var(--text);
+}
+.reiter:not(.is-aktiv):hover { background: var(--tint-orange-20); }
+.reiter.is-aktiv {
+  background: var(--active-bg);
+  border-color: var(--active-bg);
+  border-bottom-color: var(--active-accent);
+  color: var(--active-text);
+}
+.reiter__knopf, .reiter__stift {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.reiter__knopf {
+  flex: 1;
+  min-width: 0;
+  min-height: 52px;
+  padding: 0 14px;
+  font: 700 1.1875rem/1 var(--font-sans);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.reiter__stift {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  margin-right: 6px;
+  display: grid;
+  place-items: center;
+  background: var(--white);
+  border: var(--hair) solid var(--c-coral);
+}
+.reiter__stift:hover { background: var(--tint-orange-20); }
+.reiter__knopf:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.reiter.is-aktiv .reiter__knopf:focus-visible { outline-color: var(--white); outline-offset: -6px; }
+#knopf-neuer-kurs { font: 700 1.75rem/1 var(--font-sans); }
+
+/* ============================================================
+   TAFEL
+   ============================================================ */
+.tafel {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.tafel__leer {
+  position: absolute;
+  inset: 0;
+  width: fit-content;
+  max-width: 80%;
+  height: fit-content;
+  margin: auto;
+  text-align: center;
+  font-size: 1.5rem;
+  pointer-events: none;
+}
+.tafel__leer[hidden] { display: none; }
+
+/* ---------- Widget = Fenster-Karte ---------- */
+.widget {
+  position: absolute;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  cursor: grab;
+}
+.widget.is-ausgewaehlt { outline: 3px solid var(--c-petrol-dark); outline-offset: 4px; }
+
+/* Werkzeug (Einstellungen, Löschen) in der Titelleiste, nur wenn ausgewählt */
+.widget__werkzeug { display: none; gap: 6px; }
+.widget.is-ausgewaehlt .widget__werkzeug { display: flex; }
+.widget__werkzeug .btn { width: 40px; min-width: 40px; min-height: 40px; height: 40px; box-shadow: none; border-width: var(--hair); }
+
+.widget__inhalt {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  container-type: size;   /* Inhalte skalieren mit der Widget-Größe (cqmin, cqh …) */
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+}
+
+/* Frei stehend (Lehrer:in): kein Rahmen, Mülleimer schwebt darüber */
+.widget--frei { display: flex; flex-direction: column; }
+.widget--frei .widget__inhalt { padding: 0; overflow: visible; }
+.widget--frei.is-ausgewaehlt { outline: 2px dashed var(--c-petrol-dark); outline-offset: 2px; }
+.widget--frei .widget__werkzeug { position: absolute; top: -52px; right: 0; z-index: 4; }
+.widget--frei .widget__werkzeug .btn { box-shadow: var(--shadow-sm); }
+
+/* Anfasser an den Ecken: kleines Quadrat, Trefferfläche größer für Finger */
+.widget__ecke {
+  display: none;
+  position: absolute;
+  z-index: 3;
+  width: 20px;
+  height: 20px;
+  background: var(--white);
+  border: 3px solid var(--c-petrol-dark);
+  touch-action: none;
+}
+.widget__ecke::before { content: ""; position: absolute; inset: -14px; }
+.widget.is-ausgewaehlt .widget__ecke { display: block; }
+.widget__ecke[data-ecke="nw"] { left: -11px; top: -11px; cursor: nwse-resize; }
+.widget__ecke[data-ecke="ne"] { right: -11px; top: -11px; cursor: nesw-resize; }
+.widget__ecke[data-ecke="sw"] { left: -11px; bottom: -11px; cursor: nesw-resize; }
+.widget__ecke[data-ecke="se"] { right: -11px; bottom: -11px; cursor: nwse-resize; }
+
+/* Platzhalter bis zur jeweiligen Phase */
+.widget__inhalt .platzhalter {
+  margin: auto;
+  text-align: center;
+  font: 700 clamp(1rem, 10cqmin, 3rem)/1.2 var(--font-sans);
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   WIDGET-LEISTE (unten)
+   ============================================================ */
+.leiste {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+  background: var(--cream-deep);
+  border-top: var(--frame-width) solid var(--line-color);
+}
+.leiste__widgets, .leiste__extra { display: flex; gap: 4px; }
+.leiste__extra { justify-content: flex-end; }
+.leiste__knopf {
+  position: relative;
+  appearance: none;
+  border: var(--hair) solid transparent;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  touch-action: manipulation;
+  min-width: 88px;
+  padding: 6px 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font: 700 var(--size-label)/1.1 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.leiste__knopf:hover { background: var(--white); border-color: var(--line-color); }
+.leiste__knopf:active { transform: translate(1px, 1px); }
+.leiste__knopf[hidden] { display: none; }
+
+/* Dezenter Hinweis (z. B. Sicherung fällig): gelbes Quadrat mit ! */
+.hat-hinweis::after {
+  content: "!";
+  position: absolute;
+  top: 2px;
+  right: 14px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  background: var(--c-sun);
+  border: var(--hair) solid var(--c-petrol-dark);
+  color: var(--text);
+  font: 800 1rem/1 var(--font-sans);
+}
+
+/* ============================================================
+   DIALOG (Fenster-Karte in der Mitte)
+   ============================================================ */
+.dialog {
+  padding: 0;
+  color: var(--text);
+  width: min(620px, 92vw);
+  max-height: 90vh;
+}
+.dialog:not([open]) { display: none; }
+.dialog::backdrop { background: var(--veil); }
+.dialog .window__body { overflow-y: auto; font-size: 1.1875rem; }
+.dialog__inhalt p { margin: 0 0 12px; }
+.dialog__wichtig { font-weight: 700; }
+.dialog__knoepfe, .dialog__aktionen { display: flex; flex-wrap: wrap; gap: 12px; }
+.dialog__knoepfe { flex-direction: row-reverse; margin-top: 8px; }
+.dialog__aktionen { margin-top: 16px; }
+.dialog__aktionen .btn { flex: 1 1 auto; }
+label.btn { cursor: pointer; }
+
+.feld-label { display: block; margin-bottom: 8px; font: 700 var(--size-label)/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: .14em; color: var(--text-muted); }
+.feld {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 12px;
+  border: var(--frame-width) solid var(--line-color);
+  border-radius: 0;
+  background: var(--white);
+  color: var(--text);
+  font: 400 1.25rem/1.2 var(--font-sans);
+}
+.feld:focus-visible { outline-offset: 0; border-color: var(--c-petrol-dark); }
+
+
+/* ============================================================
+   UHR
+   ============================================================ */
+.uhr {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqh;
+}
+.uhr__zeit { font: 800 min(62cqh, 34cqw)/1 var(--font-sans); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.uhr__datum { font: 700 min(11cqh, 6cqw)/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); text-align: center; }
+.uhr__analog { display: none; position: relative; align-self: stretch; flex: 1; min-height: 0; }
+.uhr__analog svg, .timer__ring svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.uhr__blatt { fill: var(--white); stroke: var(--c-petrol-dark); stroke-width: 3; }
+.uhr__strich { stroke: var(--c-petrol-dark); stroke-width: 2; }
+.uhr__strich--gross { stroke-width: 4; }
+.uhr__zeiger { stroke: var(--c-petrol-dark); }
+.uhr__zeiger--h { stroke-width: 6; }
+.uhr__zeiger--m { stroke-width: 4; }
+.uhr__zeiger--s { stroke: var(--c-coral); stroke-width: 2; }
+.uhr__mitte { fill: var(--c-coral); }
+.uhr.ist-analog .uhr__zeit, .uhr.ist-analog .uhr__datum { display: none; }
+.uhr.ist-analog .uhr__analog { display: block; }
+
+/* ============================================================
+   TIMER UND STOPPUHR
+   ============================================================ */
+.timer {
+  --pm: max(44px, min(16cqh, 8cqw));   /* Höhe der + / − Knöpfe, auch Platz über dem Doppelpunkt */
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 3cqw;
+}
+.timer__ring { position: relative; flex: none; align-self: stretch; aspect-ratio: 1; max-width: 32cqw; }
+.timer__spur, .timer__bogen, .timer__kontur { fill: none; }
+.timer__spur { stroke: var(--tint-teal-20); stroke-width: 12; }
+.timer__bogen { stroke: var(--c-teal); stroke-width: 12; }
+.timer__kontur { stroke: var(--c-petrol-dark); stroke-width: 2; }
+.timer__zeit {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  font: 800 min(44cqh, 15cqw)/1 var(--font-sans);
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+}
+.timer__ziffer { display: flex; flex-direction: column; align-items: center; }
+.timer__platz { height: var(--pm); }
+.timer__pm {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  touch-action: manipulation;
+  width: 100%;
+  height: var(--pm);
+  font: 700 min(16cqh, 8cqw)/1 var(--font-mono);   /* Zeichen wächst mit, die Trefferfläche bleibt mindestens 44 px */
+}
+.timer__pm:hover { background: var(--tint-orange-20); color: var(--text); }
+.timer.laeuft .timer__pm { visibility: hidden; }
+.timer.ist-stoppuhr .timer__pm, .timer.ist-stoppuhr .timer__platz { visibility: hidden; }
+
+.timer__knoepfe { display: flex; flex-direction: column; gap: 3cqh; }
+.timer__knoepfe .btn--square { width: max(56px, 22cqh); height: max(56px, 22cqh); }
+@container (min-height: 260px) { .timer__knoepfe img { width: 56px; height: 56px; } }
+
+/* Zeit abgelaufen: Ring und Ziffern blinken, Ziffern in Koralle (große Schrift, 3 : 1) */
+.timer.is-fertig .timer__ziffer span { color: var(--c-coral); }
+.timer.is-fertig .timer__ring svg, .timer.is-fertig .timer__ziffer span { animation: blinken 1s steps(1, end) infinite; }
+@keyframes blinken { 50% { opacity: 0; } }
+
+/* ============================================================
+   LEHRER:IN – frei stehende Figur (Größe setzt lehrerin.js ganzzahlig)
+   ============================================================ */
+.lehrerin { flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center; }
+.lehrerin__figur { position: relative; flex: none; }
+.lehrerin__figur > img:first-child { display: block; width: 100%; height: 100%; }
+.lehrerin__sprite { position: absolute; pointer-events: none; }
+
+/* Auswahl-Dialog: Stimmungen als Bild-Kacheln */
+.lehrerin__auswahl { display: grid; grid-template-columns: repeat(4, 1fr); }
+.lehrerin__auswahl legend { grid-column: 1 / -1; }
+.lehrerin__auswahl span { flex-direction: column; justify-content: center; gap: 6px; width: 100%; padding: 10px 6px; font-size: 1rem; }
+.lehrerin__auswahl img { width: 84px; height: 160px; }

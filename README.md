@@ -34,19 +34,21 @@ Danach: Jede hochgeladene Änderung ist nach etwa einer Minute online. Siehst du
 ## Was ist wo?
 
 ```
-index.html            die Seite
+index.html            die Tafel
+styleguide.html       Stilvorlage: alle Bausteine, Farben und Kontraste
 css/tokens.css        Farben, Größen, Schriften
-css/components.css    Bausteine (Karten, Reiter, Toggle, Knöpfe …)
-css/sky.css           der Pixel-Himmel
-js/toggle.js          Umschalten zwischen Abschnitten
-assets/fonts/         Schrift Pixelify Sans (Lizenz: OFL.txt)
-assets/deko/          Deko-Motive (Sterne, Herz, Wolke, Sonne, Mond)
-assets/icons/         Icons für Reiter und Knöpfe
+css/components.css    Bausteine (Fenster-Karte, Chips, Zeilen, Knöpfe …)
+css/app.css           Aufbau der Tafel und der Widgets
+js/                   Tafel, Kurse, Speicher, Widgets
+assets/fonts/         Schriften Source Sans 3 und JetBrains Mono (Lizenz: OFL-*.txt)
+assets/deko/          Sprites neben der Figur (Ausrufezeichen, Fragezeichen, Herz)
+assets/icons/         Pixel-Icons
+assets/teacher/       Lehrer:in-Figur, ein Bild pro Stimmung
 tools/                Werkzeug zum Zeichnen neuer Pixel-Motive
 DESIGN.md             Design-Handbuch
 CLAUDE.md             Hinweise für Claude Code
 ```
 
-## Lizenz der Schrift
+## Lizenz der Schriften
 
-Pixelify Sans steht unter der SIL Open Font License 1.1, siehe `assets/fonts/OFL.txt`. Du darfst sie frei verwenden und weitergeben.
+Source Sans 3 und JetBrains Mono stehen unter der SIL Open Font License 1.1, siehe `assets/fonts/OFL-source-sans-3.txt` und `assets/fonts/OFL-jetbrains-mono.txt`. Du darfst sie frei verwenden und weitergeben.

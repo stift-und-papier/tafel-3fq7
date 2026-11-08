@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stilvorlage – Klassenzimmer-Tafel</title>
+  <link rel="stylesheet" href="css/tokens.css?v=6">
+  <link rel="stylesheet" href="css/components.css?v=6">
+  <style>
+    /* nur für diese Übersichtsseite */
+    .sg { max-width: 960px; margin: 0 auto; padding: 40px 24px 96px; display: flex; flex-direction: column; gap: 64px; }
+    .sg-zwei { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+    .sg-reihe { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .sg-hero .window__body { padding-right: 220px; min-height: 420px; }
+    .sg-material .window__body { padding-right: 200px; padding-bottom: 72px; }
+    .sg-farben { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .sg-farbe { border: var(--hair) solid var(--line-color); background: var(--white); font: 400 .8125rem/1.3 var(--font-mono); }
+    .sg-farbe div { height: 56px; border-bottom: var(--hair) solid var(--line-color); }
+    .sg-farbe p { margin: 0; padding: 6px 8px; }
+    .sg-tab { width: 100%; border-collapse: collapse; background: var(--white); font-size: .9375rem; }
+    .sg-tab th, .sg-tab td { border: var(--hair) solid var(--line-color); padding: 6px 10px; text-align: left; }
+    .sg-tab td:first-child { font-weight: 700; }
+    .sg-icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; }
+    .sg-icon { border: var(--hair) solid var(--line-color); background: var(--white); text-align: center; font: 400 .75rem/1.2 var(--font-mono); padding-bottom: 6px; }
+    .sg-icon div { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .sg-icon span { display: grid; place-items: center; height: 44px; }
+    .sg-icon img { width: 28px; height: 28px; }
+  </style>
+</head>
+<body class="page">
+<main class="sg">
+
+  <!-- 1. Titelkarte (Variante A) mit Figur -->
+  <section>
+    <div class="header-strip"><span class="label">Bereich // Thema</span><span class="counter">01 / 08</span></div>
+    <article class="window window--hero sg-hero">
+      <div class="window__titlebar">
+        <h2 class="window__title"><img class="pixel" src="assets/icons/laden.svg" alt=""><span>bereich_01 / thema.exe</span></h2>
+        <div class="window__tools"><div class="window__buttons" aria-hidden="true"><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="window__body">
+        <span class="chip"><img class="pixel" src="assets/icons/wuerfel.svg" alt="">Tag / Thema</span>
+        <h1 class="heading">Eine große Überschrift über zwei Zeilen</h1>
+        <p class="lead" style="color: var(--text)">Hier steht ein kurzer Einleitungstext mit <mark>markierten Wörtern</mark>, damit man sieht, wie <mark>der Textmarker</mark> wirkt.</p>
+        <div class="chip-list">
+          <span class="chip chip--peach"><img class="pixel" src="assets/icons/uhr.svg" alt="">Meta-Chip</span>
+          <span class="chip chip--peach"><img class="pixel" src="assets/icons/stift.svg" alt="">4 Aufgaben</span>
+        </div>
+      </div>
+      <img class="sprite" src="assets/deko/ausrufe.svg" width="10" height="28" alt="" aria-hidden="true" style="right: 168px; bottom: 236px">
+      <img class="sprite" src="assets/deko/herz.svg" width="24" height="20" alt="" aria-hidden="true" style="right: 8px; bottom: 200px">
+      <img class="teacher-overlap" src="assets/teacher/lehrerin-winkend.png" alt="Lehrerin winkt" style="right: 28px">
+    </article>
+  </section>
+
+  <!-- 2. Inhaltskarte (Variante B) mit Listenzeilen -->
+  <section>
+    <div class="header-strip"><span class="label">Das Material</span><span class="counter">02 / 08</span></div>
+    <article class="window sg-material">
+      <div class="window__titlebar">
+        <h2 class="window__title"><img class="pixel" src="assets/icons/laden.svg" alt=""><span>material /</span></h2>
+        <div class="window__tools"><div class="window__buttons" aria-hidden="true"><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="window__body">
+        <h2 class="heading heading--small">Inhaltskarte mit Listenzeilen</h2>
+        <p class="lead">Unterzeile in gedämpftem Petrol. Darunter Listenzeilen mit Icon-Block.</p>
+        <ul class="rows">
+          <li class="row"><span class="row__icon"><img class="pixel" src="assets/icons/stift.svg" alt=""></span><div><p class="row__title">Titel der Zeile</p><p class="row__text">gedämpfte Beschreibung</p></div></li>
+          <li class="row"><span class="row__icon"><img class="pixel" src="assets/icons/bild.svg" alt=""></span><div><p class="row__title">Zweite Zeile</p><p class="row__text">noch eine Beschreibung</p></div></li>
+          <li class="row"><span class="row__icon"><img class="pixel" src="assets/icons/folien.svg" alt=""></span><div><p class="row__title">Dritte Zeile</p><p class="row__text">und noch eine</p></div></li>
+        </ul>
+      </div>
+      <img class="sprite" src="assets/deko/frage.svg" width="18" height="26" alt="" aria-hidden="true" style="right: 20px; bottom: 236px">
+      <img class="teacher-overlap" src="assets/teacher/lehrerin-nachdenklich.png" alt="Lehrerin überlegt" style="right: 20px">
+    </article>
+  </section>
+
+  <!-- 3. Nummern-Zeilen und Hinweis-Kasten -->
+  <section>
+    <div class="header-strip"><span class="label">Gruppen // Beispiel</span><span class="counter">03 / 08</span></div>
+    <article class="window">
+      <div class="window__titlebar">
+        <h2 class="window__title"><img class="pixel" src="assets/icons/wuerfel.svg" alt=""><span>zufall.exe</span></h2>
+        <div class="window__tools"><div class="window__buttons" aria-hidden="true"><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="window__body">
+        <span class="chip chip--peach"><img class="pixel" src="assets/icons/wuerfel.svg" alt="">Abzählen 1 – 3</span>
+        <ol class="rows">
+          <li class="row"><span class="row__num">1</span><div><p class="row__title">Gruppe eins</p><p class="row__text">Fuchs-07, Eule-12</p></div></li>
+          <li class="row"><span class="row__num">2</span><div><p class="row__title">Gruppe zwei</p><p class="row__text">Igel-03, Dachs-09</p></div></li>
+        </ol>
+        <div class="callout">Hier steht eine Leitfrage im Hinweis-Kasten?</div>
+      </div>
+    </article>
+  </section>
+
+  <!-- 4. Bedienelemente und ein Widget, wie es auf der Tafel aussieht -->
+  <section class="sg-zwei">
+    <div>
+      <div class="header-strip"><span class="label">Bedienung</span></div>
+      <div class="window">
+        <div class="window__titlebar"><h2 class="window__title"><img class="pixel" src="assets/icons/zahnrad.svg" alt=""><span>knoepfe.exe</span></h2></div>
+        <div class="window__body">
+          <div class="sg-reihe">
+            <button class="btn btn--primary" type="button"><img class="pixel" src="assets/icons/start.svg" alt="">Start</button>
+            <button class="btn" type="button"><img class="pixel" src="assets/icons/stopp.svg" alt="">Stopp</button>
+            <button class="btn btn--square" type="button" aria-label="Löschen"><img class="pixel" src="assets/icons/muell.svg" alt=""></button>
+            <button class="btn" type="button" disabled>Gesperrt</button>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Beispiel-Reiter">
+            <button class="tab" role="tab" aria-selected="true" type="button">Kurs 1</button>
+            <button class="tab" role="tab" aria-selected="false" type="button">Kurs 2</button>
+            <button class="tab" role="tab" aria-selected="false" type="button">Kurs 3</button>
+          </div>
+          <fieldset class="choice">
+            <legend class="label">Auswahl</legend>
+            <label><input type="radio" name="sg-wahl" checked><span>Digital</span></label>
+            <label><input type="radio" name="sg-wahl"><span>Analog</span></label>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="header-strip"><span class="label">Widget, ausgewählt</span></div>
+      <div class="window">
+        <div class="window__titlebar">
+          <h2 class="window__title"><img class="pixel" src="assets/icons/uhr.svg" alt=""><span>Timer</span></h2>
+          <div class="window__tools">
+            <button class="btn btn--small" type="button" aria-label="Einstellungen"><img class="pixel" src="assets/icons/zahnrad.svg" alt=""></button>
+            <button class="btn btn--small" type="button" aria-label="Widget löschen"><img class="pixel" src="assets/icons/muell.svg" alt=""></button>
+            <div class="window__buttons" aria-hidden="true"><i></i><i></i><i></i></div>
+          </div>
+        </div>
+        <div class="window__body" style="align-items: center">
+          <p style="margin: 0; font: 800 4rem/1 var(--font-sans); letter-spacing: -.03em">10:00</p>
+          <p class="callout" style="margin: 0">Tippe unten auf ein Widget, um es auf die Tafel zu legen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Icons auf den neuen Flächen -->
+  <section>
+    <div class="header-strip"><span class="label">Icons // Weiß, Creme, Orange-Tönung, Titelleiste</span></div>
+    <div class="sg-icons" id="sg-icons"></div>
+    <h3 class="label" style="margin: 32px 0 12px">Neue Sprites neben der Figur (8-fach vergrößert)</h3>
+    <div class="sg-reihe sg-gross">
+      <img class="pixel" src="assets/deko/ausrufe.svg" width="40" height="112" alt="Ausrufezeichen">
+      <img class="pixel" src="assets/deko/frage.svg" width="72" height="104" alt="Fragezeichen">
+      <img class="pixel" src="assets/deko/herz.svg" width="96" height="80" alt="Herz">
+    </div>
+  </section>
+
+  <!-- 6. Farbtafel und Kontraste (rechnet das Skript direkt aus tokens.css) -->
+  <section>
+    <div class="header-strip"><span class="label">Farben // tokens.css</span></div>
+    <div class="sg-farben" id="sg-farben"></div>
+  </section>
+  <section>
+    <div class="header-strip"><span class="label">Kontraste</span></div>
+    <table class="sg-tab" id="sg-kontrast"><thead><tr><th>Text</th><th>Hintergrund</th><th>Verhältnis</th><th>nötig</th><th>Ergebnis</th></tr></thead><tbody></tbody></table>
+  </section>
+</main>
+<script src="js/styleguide.js?v=6"></script>
+</body>
+</html>
