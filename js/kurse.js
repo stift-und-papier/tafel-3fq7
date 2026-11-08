@@ -1,6 +1,7 @@
 /* ============================================================
    KURS-REITER – ein Reiter pro Kurs. Klick wechselt die Tafel,
-   Doppelklick oder Stift öffnet „Kurs bearbeiten“ (umbenennen, löschen),
+   Aktiven Reiter noch einmal antippen zeigt Stift (umbenennen) und Mülleimer (löschen),
+   Doppelklick öffnet „Kurs bearbeiten“,
    + legt einen neuen Kurs an. Tastatur: Pfeile links/rechts, Pos1, Ende.
    ============================================================ */
 (function () {
@@ -10,6 +11,19 @@
 
   function finde(id) {
     return T.zustand.kurse.filter(function (k) { return k.id === id; })[0];
+  }
+
+  var offen = null;   // Kurs, an dessen Reiter gerade Stift und Mülleimer zu sehen sind
+
+  function werkzeug(art, id, icon, text) {
+    var s = document.createElement("button");
+    s.type = "button";
+    s.className = "reiter__stift";
+    s.dataset[art] = id;
+    s.title = text;
+    s.setAttribute("aria-label", text);
+    s.innerHTML = T.icon(icon, 28);
+    return s;
   }
 
   T.zeigeReiter = function () {
@@ -28,15 +42,10 @@
       b.dataset.id = k.id;
       b.textContent = k.name;
       r.appendChild(b);
-      if (aktiv) {
-        var s = document.createElement("button");
-        s.type = "button";
-        s.className = "reiter__stift";
-        s.dataset.bearbeiten = k.id;
-        s.title = "Kurs umbenennen oder löschen";
-        s.setAttribute("aria-label", "Kurs „" + k.name + "“ umbenennen oder löschen");
-        s.innerHTML = T.icon("stift", 28);
-        r.appendChild(s);
+      // Stift und Mülleimer erst, wenn man den aktiven Reiter noch einmal antippt
+      if (aktiv && offen === k.id) {
+        r.appendChild(werkzeug("bearbeiten", k.id, "stift", "Kurs „" + k.name + "“ umbenennen"));
+        if (T.zustand.kurse.length > 1) r.appendChild(werkzeug("loeschen", k.id, "muell", "Kurs „" + k.name + "“ löschen"));
       }
       liste.appendChild(r);
     });
@@ -64,6 +73,8 @@
     var knoepfe = [{ text: "Fertig", wert: "ok" }, { text: "Abbrechen", wert: "", hell: true }];
     if (T.zustand.kurse.length > 1) knoepfe.push({ text: "Kurs löschen", wert: "loeschen", hell: true });
     T.dialog({ titel: "Kurs bearbeiten", icon: "stift", inhalt: feld, knoepfe: knoepfe }).then(function (wert) {
+      offen = null;
+      T.zeigeReiter();
       if (wert === "ok" && input.value.trim()) {
         k.name = input.value.trim();
         T.speichere();
@@ -76,6 +87,8 @@
   function loesche(k) {
     T.frage("Kurs löschen?", "„" + k.name + "“ wird mit allen Widgets und der Namensliste gelöscht. Das lässt sich nicht rückgängig machen.",
       "Ja, löschen").then(function (ja) {
+      offen = null;
+      T.zeigeReiter();
       if (!ja) return;
       var kurse = T.zustand.kurse, i = kurse.indexOf(k);
       kurse.splice(i, 1);
@@ -89,8 +102,22 @@
   liste.addEventListener("click", function (e) {
     var stift = e.target.closest("[data-bearbeiten]");
     if (stift) return bearbeite(stift.dataset.bearbeiten);
+    var weg = e.target.closest("[data-loeschen]");
+    if (weg) return loesche(finde(weg.dataset.loeschen));
     var tab = e.target.closest('[role="tab"]');
-    if (tab) wechsle(tab.dataset.id, false);
+    if (!tab) return;
+    if (tab.dataset.id === T.zustand.aktiv) {
+      offen = offen === tab.dataset.id ? null : tab.dataset.id;
+      T.zeigeReiter();
+      liste.querySelector('[aria-selected="true"]').focus();
+    } else {
+      offen = null;
+      wechsle(tab.dataset.id, false);
+    }
+  });
+  // Antippen woanders blendet Stift und Mülleimer wieder aus
+  document.addEventListener("pointerdown", function (e) {
+    if (offen && !e.target.closest(".reiter-liste, dialog")) { offen = null; T.zeigeReiter(); }
   });
   liste.addEventListener("dblclick", function (e) {
     var tab = e.target.closest('[role="tab"]');
