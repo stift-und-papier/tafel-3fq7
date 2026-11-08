@@ -1,0 +1,101 @@
+/* ============================================================
+   TOKENS – alle Design-Werte an einem Ort
+   Farben, Pixel-Raster, Schriften, Kartenfarben, Himmelsfarben.
+   Willst du etwas am Aussehen ändern, fang HIER an.
+   ============================================================ */
+
+/* ---------- Schrift: Pixelify Sans (frei, Lizenz OFL – assets/fonts/OFL.txt) ---------- */
+@font-face {
+  font-family: "Pixelify Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/pixelify-sans-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Pixelify Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/pixelify-sans-latin-700-normal.woff2") format("woff2");
+}
+
+:root {
+  /* ---------- Pixel-Raster ----------
+     --px ist EIN Pixel der Pixelgrafik. Rahmen, Abstände, Ecken, Muster
+     und Icon-Größen sind immer ganze Vielfache davon. */
+  --px: 4px;
+  --line: calc(var(--px) / 2);      /* dünne Außenlinie */
+  --border: var(--px);              /* dicker Rahmen */
+  --step: var(--px);                /* eine Treppenstufe in den Ecken */
+
+  /* ---------- Grundfarben ---------- */
+  --cream: #FFF7EC;
+  --page: #FFF4E4;                  /* Seitenhintergrund (ändert sich je Stimmung, siehe unten) */
+  --dot: #E9D3B8;                   /* Punktraster */
+  --ink: #3B2418;                   /* Haupttext, Kontrast mit Creme ca. 14:1 */
+  --ink-soft: #5E4030;              /* Nebentext, Kontrast mit Creme ca. 9:1 */
+  --terracotta: #D9714E;
+  --terracotta-dark: #A84A2A;       /* Knöpfe, Kontrast mit Creme ca. 5:1 */
+  --mustard: #E8B23A;
+
+  /* ---------- Schriften ---------- */
+  --font-text: ui-rounded, "SF Pro Rounded", "Nunito", "Varela Round", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-pixel: "Pixelify Sans", var(--font-text);
+  --size-text: 1.0625rem;           /* Fließtext 17 px */
+  --size-title: clamp(2rem, 7.5vw, 3.5rem);
+  --size-tab: 1.3rem;
+  --size-toggle: 1.25rem;
+
+  /* ---------- Breite der Seite ---------- */
+  --page-width: 1120px;
+
+  /* ---------- Ecken mit zwei Treppenstufen (statt Rundungen) ---------- */
+  --stairs: polygon(
+    0 calc(2 * var(--step)), var(--step) calc(2 * var(--step)), var(--step) var(--step), calc(2 * var(--step)) var(--step), calc(2 * var(--step)) 0,
+    calc(100% - 2 * var(--step)) 0, calc(100% - 2 * var(--step)) var(--step), calc(100% - var(--step)) var(--step), calc(100% - var(--step)) calc(2 * var(--step)), 100% calc(2 * var(--step)),
+    100% calc(100% - 2 * var(--step)), calc(100% - var(--step)) calc(100% - 2 * var(--step)), calc(100% - var(--step)) calc(100% - var(--step)), calc(100% - 2 * var(--step)) calc(100% - var(--step)), calc(100% - 2 * var(--step)) 100%,
+    calc(2 * var(--step)) 100%, calc(2 * var(--step)) calc(100% - var(--step)), var(--step) calc(100% - var(--step)), var(--step) calc(100% - 2 * var(--step)), 0 calc(100% - 2 * var(--step)));
+  /* nur oben Treppen (für Reiter) */
+  --stairs-top: polygon(
+    0 calc(2 * var(--step)), var(--step) calc(2 * var(--step)), var(--step) var(--step), calc(2 * var(--step)) var(--step), calc(2 * var(--step)) 0,
+    calc(100% - 2 * var(--step)) 0, calc(100% - 2 * var(--step)) var(--step), calc(100% - var(--step)) var(--step), calc(100% - var(--step)) calc(2 * var(--step)), 100% calc(2 * var(--step)),
+    100% 100%, 0 100%);
+
+  /* ---------- Standard-Kartenfarbe (Apricot) ---------- */
+  --outline: #8A4B2E;   /* dünne Außenlinie */
+  --frame: #E9A06E;     /* dicker Rahmen und Reiter */
+  --fill: #FDEBD8;      /* helle Füllung (darauf steht der Text) */
+  --pressed: #F6C49A;   /* Füllung eines gedrückten Knopfs */
+}
+
+/* ============================================================
+   KARTENFARBEN
+   Jede Variante setzt vier Farben. Text (--ink) hat auf Rahmen und
+   Füllung immer mindestens 5:1 Kontrast (AA erfüllt).
+   ============================================================ */
+.card--apricot { --outline: #8A4B2E; --frame: #E9A06E; --fill: #FDEBD8; --pressed: #F6C49A; }
+.card--sage    { --outline: #4A6644; --frame: #9DBB8E; --fill: #EEF4E6; --pressed: #C8DCB9; }
+.card--dusk    { --outline: #4B4C7E; --frame: #A9ACDA; --fill: #EFEFFA; --pressed: #CDCFEE; }
+.card--mustard { --outline: #7E5C14; --frame: #E3BC55; --fill: #FDF4D9; --pressed: #F3D88C; }
+.card--rose    { --outline: #8E4456; --frame: #E7A3B2; --fill: #FDEFF2; --pressed: #F5C9D2; }
+.card--warning { --outline: #7E2A1C; --frame: #E0805E; --fill: #FFF0E8; --pressed: #F6C1AE; }
+/* Kopfkarte, Fußleiste: Apricot-Orange */
+.header-card, .footer-bar { --outline: #8A4B2E; --frame: #EE9B5E; --fill: #FFF3E5; }
+
+/* ============================================================
+   STIMMUNGEN (zum Toggle passend)
+   Pro Stimmung: 6 Himmelsfarben (oben --sky-1 … unten --sky-6)
+   und ein leicht getönter Seitenhintergrund mit Punktraster.
+   Der Name hinter data-sky / data-mood steht im HTML am Toggle-Knopf.
+   ============================================================ */
+/* Morgen: Sonnenaufgang – zartes Blau und Flieder oben, Rosé, Pfirsich unten */
+[data-sky="morgen"] { --sky-1: #C6D4EE; --sky-2: #D6CCEA; --sky-3: #E6C9E0; --sky-4: #F3C8CF; --sky-5: #F8D0B6; --sky-6: #FBDDBD; }
+/* Mittag: helles Himmelblau, Creme, Gelb */
+[data-sky="mittag"] { --sky-1: #94CAE8; --sky-2: #ADD8EE; --sky-3: #C6E4EF; --sky-4: #DDEEE8; --sky-5: #F3EFD0; --sky-6: #FAE7A6; }
+/* Abend: Nachtblau oben, Violett, Rosa, Orange unten */
+[data-sky="abend"]  { --sky-1: #232C5A; --sky-2: #363C77; --sky-3: #574A8A; --sky-4: #855A94; --sky-5: #C77592; --sky-6: #EE9F7A; }
+
+body[data-mood="morgen"] { --page: #FCEBE3; --dot: #EBC6BC; }   /* Pfirsich-Rosé */
+body[data-mood="mittag"] { --page: #FFF6E2; --dot: #E5D5AC; }   /* warmes Gelb-Creme */
+body[data-mood="abend"]  { --page: #EFE6F1; --dot: #CDBDD8; }   /* zartes Dämmer-Flieder */

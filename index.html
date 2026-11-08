@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hier kommt dein Titel</title>
+  <meta name="theme-color" content="#FFF4E4">
+  <!-- ?v=1: bei jeder Änderung hochzählen, damit Browser die neuen Dateien laden -->
+  <link rel="preload" href="assets/fonts/pixelify-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/tokens.css?v=1">
+  <link rel="stylesheet" href="css/sky.css?v=1">
+  <link rel="stylesheet" href="css/components.css?v=1">
+</head>
+<body>
+
+<!-- ============================================================
+     PIXEL-HIMMEL (nur Deko). Eine Ebene pro Stimmung, data-sky = Name.
+     Motive: Breite/Höhe = Motivgröße × 4 (1 Motiv-Pixel = 1 --px)
+     ============================================================ -->
+<div class="sky" aria-hidden="true">
+  <div class="sky__layer" data-sky="morgen">
+    <img class="sky__deco" src="assets/deko/sonne.svg" width="96" height="96" alt="" style="right: calc(-12 * var(--px)); top: calc(-4 * var(--px));">
+    <img class="sky__deco" src="assets/deko/wolke.svg" width="56" height="32" alt="" style="left: 6%; top: calc(3 * var(--px));">
+    <img class="sky__deco" src="assets/deko/wolke.svg" width="56" height="32" alt="" style="left: 58%; top: var(--px);">
+  </div>
+  <div class="sky__layer" data-sky="mittag">
+    <img class="sky__deco" src="assets/deko/sonne.svg" width="48" height="48" alt="" style="right: 9%; top: var(--px);">
+    <img class="sky__deco" src="assets/deko/wolke.svg" width="56" height="32" alt="" style="left: 4%; top: calc(4 * var(--px));">
+    <img class="sky__deco" src="assets/deko/wolke.svg" width="56" height="32" alt="" style="left: 38%; top: var(--px);">
+    <img class="sky__deco" src="assets/deko/wolke.svg" width="56" height="32" alt="" style="right: 26%; top: calc(5 * var(--px));">
+  </div>
+  <div class="sky__layer" data-sky="abend">
+    <img class="sky__deco" src="assets/deko/mond.svg" width="48" height="48" alt="" style="right: 8%; top: var(--px);">
+    <img class="sky__deco" src="assets/deko/stern.svg" width="36" height="36" alt="" style="left: 7%; top: calc(3 * var(--px));">
+    <img class="sky__deco" src="assets/deko/funkel.svg" width="20" height="20" alt="" style="left: 24%; top: calc(8 * var(--px));">
+    <img class="sky__deco" src="assets/deko/funkel.svg" width="20" height="20" alt="" style="left: 46%; top: calc(2 * var(--px));">
+    <img class="sky__deco" src="assets/deko/stern.svg" width="36" height="36" alt="" style="left: 64%; top: calc(4 * var(--px));">
+    <img class="sky__deco" src="assets/deko/funkel.svg" width="20" height="20" alt="" style="right: 3%; top: calc(9 * var(--px));">
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ============================================================
+       KOPFKARTE: links ein Pixelbild, rechts Titel und Unterzeile
+       ============================================================ -->
+  <header class="header-card px-box has-marks">
+    <img class="header-card__image" src="assets/deko/stern.svg" width="144" height="144" alt="">
+    <div>
+      <h1 class="header-card__title">Hier kommt dein Titel</h1>
+      <p class="header-card__subtitle">Und hier eine kleine Unterzeile, die verrät, worum es geht. Gern mit einem Augenzwinkern – Tafeln haben schließlich auch Gefühle.</p>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       TOGGLE: ein Knopf pro Abschnitt. Name in data-mood,
+       Abschnitt in aria-controls. data-auto-time ist optional.
+       ============================================================ -->
+  <nav class="toggle" aria-label="Abschnitt wählen" data-auto-time="morgen 4-11, mittag 11-17, abend 17-4">
+    <div class="toggle__list" role="tablist" aria-label="Abschnitte">
+      <button class="toggle__button card--apricot" role="tab" id="tab-morgen" aria-controls="panel-morgen" aria-selected="true" data-mood="morgen">
+        <img class="toggle__icon" src="assets/icons/sonne-auf.svg" width="28" height="28" alt=""><span>Morgen</span>
+      </button>
+      <button class="toggle__button card--sage" role="tab" id="tab-mittag" aria-controls="panel-mittag" aria-selected="false" tabindex="-1" data-mood="mittag">
+        <img class="toggle__icon" src="assets/icons/sonne.svg" width="28" height="28" alt=""><span>Mittag</span>
+      </button>
+      <button class="toggle__button card--dusk" role="tab" id="tab-abend" aria-controls="panel-abend" aria-selected="false" tabindex="-1" data-mood="abend">
+        <img class="toggle__icon" src="assets/icons/mond.svg" width="28" height="28" alt=""><span>Abend</span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ====================== ABSCHNITT 1 ====================== -->
+    <section class="panel" role="tabpanel" id="panel-morgen" aria-labelledby="tab-morgen">
+
+      <div class="card card--apricot">
+        <img class="deco--tab-right" src="assets/deko/stern.svg" width="27" height="27" alt="" aria-hidden="true">
+        <img class="deco--tab-right-2" src="assets/deko/funkel.svg" width="15" height="15" alt="" aria-hidden="true">
+        <h2 class="card-tab"><img class="card-tab__icon" src="assets/icons/sonne-auf.svg" width="28" height="28" alt=""><span>Guten Morgen!</span></h2>
+        <div class="card-body px-box">
+          <p>Hier kommt deine Begrüßung. Zwei, drei freundliche Sätze, damit alle wissen, wo sie gelandet sind – und dass der Kaffee schon wirkt.</p>
+        </div>
+      </div>
+
+      <aside class="card card--rose card--highlight">
+        <img class="deco--tab-right" src="assets/deko/herz.svg" width="36" height="30" alt="" aria-hidden="true">
+        <img class="deco--tab-right-2" src="assets/deko/funkel.svg" width="20" height="20" alt="" aria-hidden="true">
+        <h2 class="card-tab"><img class="card-tab__icon" src="assets/icons/herz.svg" width="28" height="28" alt=""><span>Das Wichtigste auf einen Blick</span></h2>
+        <div class="card-body px-box has-marks">
+          <ul class="icon-list">
+            <li><img src="assets/icons/info.svg" width="28" height="28" alt=""><span><strong>Erster wichtiger Punkt.</strong> Hier steht, was niemand übersehen sollte.</span></li>
+            <li><img src="assets/icons/verbot.svg" width="28" height="28" alt=""><span><strong>Zweiter wichtiger Punkt.</strong> Und hier, was man besser lässt.</span></li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="card card--mustard">
+        <h3 class="card-tab"><img class="card-tab__icon" src="assets/icons/wecker.svg" width="28" height="28" alt=""><span>Karte mit Etikett</span> <span class="badge">ca. 5 Min.</span></h3>
+        <div class="card-body px-box">
+          <p>Hier kommt dein Text. Das braune <strong>Etikett</strong> im Reiter passt gut für Zeiten, Mengen oder Seitenzahlen.</p>
+          <ul class="pixel-list">
+            <li><img src="assets/deko/funkel.svg" width="20" height="20" alt=""><span><strong>Erster Punkt</strong> mit Pixel-Funkelstern</span></li>
+            <li><img src="assets/deko/funkel.svg" width="20" height="20" alt=""><span><strong>Zweiter Punkt</strong>, getrennt durch eine Pixel-Strichlinie</span></li>
+            <li><img src="assets/deko/funkel.svg" width="20" height="20" alt=""><span><strong>Dritter Punkt</strong> – aller guten Dinge sind drei</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card card--warning">
+        <h3 class="card-tab"><img class="card-tab__icon" src="assets/icons/verbot.svg" width="28" height="28" alt=""><span>Achtung-Karte</span></h3>
+        <div class="card-body px-box">
+          <p>Hier kommt etwas, das <strong>auffallen</strong> soll. Die Terrakotta-Farbe sagt: „Lies mich zuerst!“</p>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ====================== ABSCHNITT 2 ====================== -->
+    <section class="panel" role="tabpanel" id="panel-mittag" aria-labelledby="tab-mittag" hidden>
+
+      <div class="card card--sage">
+        <img class="deco--tab-right" src="assets/deko/stern.svg" width="27" height="27" alt="" aria-hidden="true">
+        <img class="deco--tab-right-2" src="assets/deko/funkel.svg" width="15" height="15" alt="" aria-hidden="true">
+        <h2 class="card-tab"><img class="card-tab__icon" src="assets/icons/sonne.svg" width="28" height="28" alt=""><span>Mittagspause!</span></h2>
+        <div class="card-body px-box">
+          <p>Hier kommt dein Text für den zweiten Abschnitt. Jeder Knopf oben zeigt seinen eigenen Abschnitt.</p>
+        </div>
+      </div>
+
+      <article class="card card--mustard">
+        <h3 class="card-tab"><img class="card-tab__icon" src="assets/icons/zahnrad.svg" width="28" height="28" alt=""><span>Karte mit Knöpfen</span></h3>
+        <div class="card-body px-box">
+          <p>Knöpfe gibt es in zwei Sorten:</p>
+          <p><button type="button" class="button">Los geht’s</button> <button type="button" class="button button--light">Lieber nicht</button></p>
+        </div>
+      </article>
+
+      <article class="card card--apricot">
+        <h3 class="card-tab"><img class="card-tab__icon" src="assets/icons/teller.svg" width="28" height="28" alt=""><span>Karte mit Pixelbild</span></h3>
+        <div class="card-body px-box">
+          <img class="pixel-image" src="assets/deko/wolke.svg" width="112" height="64" alt="Pixel-Wölkchen">
+          <p>Bilder immer nur ganzzahlig vergrößern (2-, 3-, 4-fach …), dann bleiben die Pixel scharf.</p>
+        </div>
+      </article>
+
+      <article class="card card--sage">
+        <img class="deco--tab-right" src="assets/deko/herz.svg" width="36" height="30" alt="" aria-hidden="true">
+        <h3 class="card-tab"><img class="card-tab__icon" src="assets/icons/waage.svg" width="28" height="28" alt=""><span>Noch eine Karte</span></h3>
+        <div class="card-body px-box">
+          <p>Bleibt am Ende eine Karte allein übrig, wird sie automatisch so breit wie beide Spalten zusammen. Schau mal beim Abend!</p>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ====================== ABSCHNITT 3 ====================== -->
+    <section class="panel" role="tabpanel" id="panel-abend" aria-labelledby="tab-abend" hidden>
+
+      <div class="card card--dusk">
+        <img class="deco--tab-right" src="assets/deko/stern.svg" width="27" height="27" alt="" aria-hidden="true">
+        <img class="deco--tab-right-2" src="assets/deko/funkel.svg" width="15" height="15" alt="" aria-hidden="true">
+        <h2 class="card-tab"><img class="card-tab__icon" src="assets/icons/mond.svg" width="28" height="28" alt=""><span>Guten Abend!</span></h2>
+        <div class="card-body px-box">
+          <p>Hier kommt dein Text für den letzten Abschnitt. Der Himmel ist jetzt dunkel, die Sterne sind wach.</p>
+        </div>
+      </div>
+
+      <article class="card card--dusk">
+        <h3 class="card-tab"><img class="card-tab__icon" src="assets/icons/info.svg" width="28" height="28" alt=""><span>Hinweis</span></h3>
+        <div class="card-body px-box note">
+          <img class="note__icon" src="assets/icons/info.svg" width="56" height="56" alt="">
+          <div>
+            <p>Ein Hinweis mit großem Icon links. Praktisch für Erinnerungen, die man nicht überlesen soll.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="card card--mustard">
+        <img class="deco--tab-right" src="assets/deko/stern.svg" width="27" height="27" alt="" aria-hidden="true">
+        <h3 class="card-tab"><img class="card-tab__icon" src="assets/icons/mond.svg" width="28" height="28" alt=""><span>Zum Schluss</span></h3>
+        <div class="card-body px-box">
+          <p>Hier kommt dein Abschluss. Und dann: Licht aus, Tafel zu.</p>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <footer class="footer-bar">
+    <p>Hier kommt ein netter Satz für die Fußleiste. ✦ Danke fürs Mitmachen!</p>
+  </footer>
+</div>
+
+<script src="js/toggle.js?v=1"></script>
+</body>
+</html>

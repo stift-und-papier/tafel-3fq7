@@ -1,0 +1,14 @@
+# Inspirationsbilder und alte Quellen – werden NICHT veröffentlicht
+referenzen/
+quellen/
+
+# Screenshots vom Testen (nur lokal)
+screenshots/
+
+# Systemdateien
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Lokale Werkzeug-Einstellungen
+.claude/

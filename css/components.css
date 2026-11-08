@@ -1,0 +1,358 @@
+/* ============================================================
+   BAUSTEINE (Komponenten)
+   Alle Werte kommen aus tokens.css. Hier steht nur, WIE etwas
+   aussieht – nicht in welcher Farbe.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-text);
+  font-size: var(--size-text);
+  line-height: 1.55;
+  color: var(--ink);
+  overflow-x: hidden;
+  /* Creme mit feinem Punktraster (ein Punkt pro 4×4 Pixel-Kästchen) */
+  background-color: var(--page);
+  background-image: conic-gradient(from 270deg at var(--line) var(--line), var(--dot) 0 90deg, transparent 90deg);
+  background-size: calc(4 * var(--px)) calc(4 * var(--px));
+}
+
+h1, h2, h3 {
+  font-family: var(--font-pixel);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+}
+
+strong { font-weight: 800; }
+
+/* Alle Pixelbilder: nur ganzzahlig skalieren, nie glätten */
+img { image-rendering: pixelated; }
+
+/* ============================================================
+   PIXEL-KASTEN: Außenlinie + dicker Rahmen + helle Füllung,
+   Ecken treppenförmig. Drei Ebenen: Kasten selbst, ::before, ::after.
+   Benutzt von Karten, Kopfkarte, Toggle-Knöpfen und Knöpfen.
+   ============================================================ */
+.px-box,
+.toggle__button,
+.button {
+  position: relative;
+  isolation: isolate;
+  background: var(--outline);
+  clip-path: var(--stairs);
+}
+.px-box::before, .px-box::after,
+.toggle__button::before, .toggle__button::after,
+.button::before, .button::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  clip-path: var(--stairs);
+}
+.px-box::before, .toggle__button::before, .button::before {
+  inset: var(--line);
+  background: var(--frame);
+}
+.px-box::after, .toggle__button::after, .button::after {
+  inset: calc(var(--line) + var(--border));
+  background: var(--fill);
+}
+.px-box { padding: calc(var(--line) + var(--border) + 4 * var(--px)); }
+
+/* Kleine Eck-Markierungen innen (wie Fotoecken) */
+.has-marks::after {
+  --a: calc(2 * var(--px));
+  --l: calc(3 * var(--px));
+  background:
+    linear-gradient(var(--frame) 0 0) left var(--a) top var(--a) / var(--l) var(--px),
+    linear-gradient(var(--frame) 0 0) left var(--a) top var(--a) / var(--px) var(--l),
+    linear-gradient(var(--frame) 0 0) right var(--a) top var(--a) / var(--l) var(--px),
+    linear-gradient(var(--frame) 0 0) right var(--a) top var(--a) / var(--px) var(--l),
+    linear-gradient(var(--frame) 0 0) left var(--a) bottom var(--a) / var(--l) var(--px),
+    linear-gradient(var(--frame) 0 0) left var(--a) bottom var(--a) / var(--px) var(--l),
+    linear-gradient(var(--frame) 0 0) right var(--a) bottom var(--a) / var(--l) var(--px),
+    linear-gradient(var(--frame) 0 0) right var(--a) bottom var(--a) / var(--px) var(--l),
+    var(--fill);
+  background-repeat: no-repeat;
+}
+
+/* Fokus: Umrisse würden von den Treppen-Ecken abgeschnitten, darum bei Knöpfen ein Ring innen */
+:focus-visible { outline: var(--px) solid var(--ink); outline-offset: var(--px); }
+:is(.toggle__button, .button):focus-visible { outline: none; }
+:is(.toggle__button, .button):focus-visible::after {
+  box-shadow: inset 0 0 0 var(--px) var(--ink), inset 0 0 0 calc(2 * var(--px)) var(--cream);
+}
+
+/* ============================================================
+   SEITENAUFBAU
+   ============================================================ */
+.page {
+  position: relative;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  --top: calc(14 * var(--px));   /* oben ein Stück Himmel mit Sonne/Mond sichtbar */
+  padding: var(--top) calc(4 * var(--px)) 0;
+}
+
+/* ---------- Kopfkarte ---------- */
+.header-card {
+  display: grid;
+  justify-items: center;
+  gap: calc(2 * var(--px));
+  text-align: center;
+}
+.header-card.px-box { padding-top: calc(var(--line) + var(--border) + 3 * var(--px)); }
+.header-card__image { display: block; }
+.header-card__title {
+  font-size: var(--size-title);
+  color: var(--ink);
+  letter-spacing: .01em;
+}
+.header-card__subtitle {
+  max-width: 34em;
+  margin: calc(2 * var(--px)) 0 0;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+}
+@media (min-width: 760px) {
+  .header-card {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    justify-items: start;
+    gap: calc(8 * var(--px));
+    text-align: left;
+    padding-right: calc(18 * var(--px));
+  }
+}
+
+/* ---------- Toggle: Pixel-Knöpfe, so viele wie im HTML stehen ---------- */
+.toggle {
+  position: sticky;
+  top: calc(2 * var(--px));
+  z-index: 10;
+  margin: calc(6 * var(--px)) auto;
+  max-width: 640px;
+}
+.toggle__list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: calc(3 * var(--px));
+}
+.toggle__button {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  min-height: calc(16 * var(--px));
+  color: var(--ink);
+  font: 700 var(--size-toggle)/1 var(--font-pixel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(2 * var(--px));
+  padding: 0 calc(3 * var(--px)) var(--px);
+}
+/* nicht gedrückt: unten eine dunklere Kante (Knopf steht hoch) */
+.toggle__button::after { bottom: calc(var(--line) + 2 * var(--border)); }
+.toggle__icon { width: calc(7 * var(--px)); height: calc(7 * var(--px)); flex: none; }
+.toggle__button:hover::after { background: var(--pressed); }
+/* gedrückt: Knopf sitzt eine Pixelreihe tiefer, Kante weg, Füllung kräftiger */
+.toggle__button[aria-selected="true"] {
+  transform: translateY(var(--px));
+  padding-bottom: 0;
+}
+.toggle__button[aria-selected="true"]::after {
+  bottom: calc(var(--line) + var(--border));
+  background: var(--pressed);
+}
+.toggle__button[aria-selected="true"] span {
+  text-decoration: underline;
+  text-decoration-thickness: var(--line);
+  text-underline-offset: var(--px);
+}
+
+/* ---------- Abschnitte (Inhalt je Toggle-Knopf) im Raster ---------- */
+.panel {
+  display: grid;
+  gap: calc(6 * var(--px));
+  animation: fade-in .45s ease;
+}
+@media (min-width: 760px) {
+  .panel { grid-template-columns: 1fr 1fr; }
+  /* bleibt am Ende eine Karte allein übrig, wird sie breit */
+  .panel > .card:last-child:nth-child(odd), .is-wide { grid-column: 1 / -1; }
+}
+.panel[hidden] { display: none; }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---------- Karte: Reiter + Kasten ---------- */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.card-body { flex: 1; }
+.card-body > :first-child { margin-top: 0; }
+.card-body p { margin: calc(3 * var(--px)) 0 0; }
+
+/* ---------- Reiter: wächst oben links aus dem Kartenrahmen ---------- */
+.card-tab {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  align-self: flex-start;
+  max-width: calc(100% - 6 * var(--px));
+  margin: 0 0 calc(-1 * (var(--line) + var(--border))) calc(3 * var(--px));
+  padding: calc(var(--line) + var(--border) + 2 * var(--px)) calc(var(--line) + 4 * var(--px)) calc(3 * var(--px));
+  display: flex;
+  align-items: center;
+  gap: calc(2 * var(--px));
+  font-size: var(--size-tab);
+  line-height: 1.2;
+  /* Außenlinie nur oben und an den Seiten; unten geht der Reiter in den Rahmen über */
+  background: linear-gradient(var(--outline) 0 0) top / 100% calc(100% - var(--line) - var(--border)) no-repeat;
+  clip-path: var(--stairs-top);
+}
+.card-tab::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: var(--line) var(--line) 0;
+  background: var(--frame);
+  clip-path: var(--stairs-top);
+}
+.card-tab__icon { width: calc(7 * var(--px)); height: calc(7 * var(--px)); flex: none; }
+
+/* Hervorgehobener Kasten: Rosé, größerer Reiter, Eck-Markierungen */
+.card--highlight .card-tab { font-size: 1.4rem; }
+
+/* ---------- Deko-Pixel neben den Reitern (sparsam) ---------- */
+.deco--tab-right, .deco--tab-right-2 { position: absolute; z-index: 2; pointer-events: none; }
+.deco--tab-right   { top: calc(2 * var(--px)); right: calc(4 * var(--px)); }
+.deco--tab-right-2 { top: calc(5 * var(--px)); right: calc(15 * var(--px)); }
+.card:has(> .deco--tab-right) > .card-tab { max-width: calc(100% - 22 * var(--px)); }
+
+/* ---------- Etikett (z. B. Mengen, Zeiten) ---------- */
+.badge {
+  display: inline-block;
+  flex: none;
+  white-space: nowrap;
+  padding: var(--px) calc(2 * var(--px));
+  background: var(--ink);
+  color: var(--cream);
+  font: 800 .95rem/1.1 var(--font-text);   /* Systemschrift: Zahlen besser lesbar als in Pixelschrift */
+  clip-path: polygon(var(--line) 0, calc(100% - var(--line)) 0, calc(100% - var(--line)) var(--line), 100% var(--line), 100% calc(100% - var(--line)), calc(100% - var(--line)) calc(100% - var(--line)), calc(100% - var(--line)) 100%, var(--line) 100%, var(--line) calc(100% - var(--line)), 0 calc(100% - var(--line)), 0 var(--line), var(--line) var(--line));
+}
+
+/* ---------- Pixelbild in einer Karte: nie krumm skalieren ---------- */
+.pixel-image {
+  display: block;
+  max-width: none;
+  margin: 0 auto calc(2 * var(--px));
+}
+
+/* ---------- Listen ---------- */
+/* Gestrichelte Trennlinie (Pixel-Striche) zwischen Listenpunkten */
+.pixel-list li + li,
+.icon-list li + li {
+  background: linear-gradient(90deg, var(--frame) 50%, transparent 0) top left / calc(2 * var(--px)) var(--line) repeat-x;
+}
+
+/* Aufzählung mit Pixel-Aufzählungszeichen (<img> vor dem Text) */
+.pixel-list {
+  margin: calc(3 * var(--px)) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.pixel-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(2 * var(--px));
+  padding: calc(2 * var(--px)) 0;
+}
+.pixel-list li > img { flex: none; margin-top: calc(var(--px) / 2); }
+.pixel-list li > span { flex: 1; }
+
+/* Liste mit großem Icon pro Punkt (wie im hervorgehobenen Kasten) */
+.icon-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.icon-list li {
+  display: flex;
+  gap: calc(3 * var(--px));
+  align-items: flex-start;
+  padding: calc(3 * var(--px)) 0;
+}
+.icon-list li:first-child { padding-top: 0; }
+.icon-list li:last-child { padding-bottom: 0; }
+.icon-list li > img { flex: none; width: calc(7 * var(--px)); height: calc(7 * var(--px)); }
+
+/* ---------- Hinweis: großes Icon links, Text rechts ---------- */
+.note { display: flex; gap: calc(4 * var(--px)); align-items: flex-start; }
+.note > div { flex: 1; }
+.note p { margin: 0; }
+.note p + p { margin-top: calc(2 * var(--px)); }
+.note__icon { flex: none; width: calc(14 * var(--px)); height: calc(14 * var(--px)); }
+
+/* ---------- Knopf ---------- */
+.button {
+  --outline: #5E2512; --frame: var(--terracotta-dark); --fill: var(--terracotta-dark);
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  min-height: calc(14 * var(--px));
+  padding: 0 calc(5 * var(--px));
+  color: var(--cream);
+  font: 700 1.2rem/1 var(--font-pixel);
+}
+.button:hover::after { background: #8F3D20; }
+.button--light { --frame: var(--terracotta-dark); --fill: var(--cream); color: var(--terracotta-dark); }
+.button--light:hover::after { background: #FCE5CF; }
+
+/* ---------- Fußleiste über die ganze Breite ---------- */
+.footer-bar {
+  margin: calc(10 * var(--px)) calc(50% - 50vw) 0;
+  padding: calc(var(--line) + var(--border) + 3 * var(--px)) calc(4 * var(--px)) calc(3 * var(--px));
+  text-align: center;
+  background:
+    linear-gradient(var(--outline) 0 0) top / 100% var(--line) no-repeat,
+    linear-gradient(var(--frame) 0 0) 0 var(--line) / 100% var(--border) no-repeat,
+    var(--fill);
+}
+.footer-bar p {
+  margin: 0;
+  font: 400 1.05rem/1.4 var(--font-pixel);
+}
+
+/* ============================================================
+   HANDY
+   ============================================================ */
+@media (max-width: 480px) {
+  .px-box { padding: calc(var(--line) + var(--border) + 3 * var(--px)); }
+  .toggle__button { flex-direction: column; gap: var(--px); font-size: 1.05rem; }
+  .card-tab { font-size: 1.15rem; }
+  .note { flex-direction: column; gap: calc(2 * var(--px)); }
+}
+
+/* ============================================================
+   WENIGER BEWEGUNG, wenn im Gerät so eingestellt
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
