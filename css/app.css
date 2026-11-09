@@ -239,7 +239,8 @@ button, label.btn { touch-action: manipulation; }   /* kein Doppeltipp-Zoom am i
 }
 .dialog:not([open]) { display: none; }
 .dialog::backdrop { background: var(--veil); }
-.dialog .window__body { overflow-y: auto; font-size: 1.1875rem; }
+/* flex: 0 1 auto statt flex: 1 – Safari am iPad drückte den Inhalt sonst auf 0 px zusammen; schrumpft nur, wenn der Platz fehlt (dann scrollen) */
+.dialog .window__body { flex: 0 1 auto; overflow-y: auto; font-size: 1.1875rem; }
 .dialog__inhalt p { margin: 0 0 12px; }
 .dialog__wichtig { font-weight: 700; }
 .dialog__knoepfe, .dialog__aktionen { display: flex; flex-wrap: wrap; gap: 12px; }
