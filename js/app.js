@@ -32,8 +32,33 @@
       vollbildAn.call(root);
     }
   });
+  // Beschriftung zeigt, was der Knopf als Nächstes tut
+  function zeigeVollbild() {
+    vollbild.querySelector("span").textContent = document.fullscreenElement || document.webkitFullscreenElement ? "Vollbild aus" : "Vollbild";
+  }
+  document.addEventListener("fullscreenchange", zeigeVollbild);
+  document.addEventListener("webkitfullscreenchange", zeigeVollbild);
 
-  // ---------- Sicherung: Menü, Erinnerung nach 14 Tagen ----------
+  // ---------- Bildschirm wach halten, solange ein Timer oder eine Stoppuhr läuft ----------
+  // Sonst sperrt das iPad nach der Auto-Sperre-Zeit und die Projektion wird schwarz.
+  var wach = null;   // Promise der laufenden Anfrage
+  function wachHalten() {
+    var soll = document.visibilityState === "visible" && T.laeuftEinTimer(T.zustand, Date.now());
+    if (soll && !wach && navigator.wakeLock) {
+      var p = wach = navigator.wakeLock.request("screen").then(function (s) {
+        s.addEventListener("release", function () { if (wach === p) wach = null; });   // z. B. App im Hintergrund
+        return s;
+      }, function () { if (wach === p) wach = null; return null; });
+    } else if (!soll && wach) {
+      wach.then(function (s) { if (s) s.release(); });
+      wach = null;
+    }
+  }
+  document.addEventListener("tafel:gespeichert", wachHalten);   // Start, Pause, Stopp speichern
+  document.addEventListener("visibilitychange", wachHalten);
+  setInterval(wachHalten, 10000);   // Timer, der in einem anderen Kurs abläuft
+
+  // ---------- Sicherung: Menü, Erinnerung nach 6 Tagen ----------
   var sicherung = document.getElementById("knopf-sicherung");
 
   function tageSeitSicherung() {
@@ -45,7 +70,7 @@
   function brauchtSicherung() {
     var tage = tageSeitSicherung();
     if (tage === null) return T.zustand.kurse.some(function (k) { return k.widgets.length > 0; });
-    return tage > 14;
+    return tage >= 6;   // Safari löscht Daten einer Seite nach 7 Tagen ohne Besuch
   }
   function sicherungsText() {
     var tage = tageSeitSicherung();
@@ -90,6 +115,14 @@
       '<input type="file" class="unsichtbar" accept=".json,application/json"></label></div>';
     var text = sicherungsText() + (brauchtSicherung() ? " Zeit für eine neue!" : "");
     inhalt.querySelector(".dialog__wichtig").textContent = text;
+    // nur in Safari am iPad/iPhone (nicht in der App vom Home-Bildschirm)
+    if (navigator.standalone === false) {
+      var tipp = document.createElement("p");
+      tipp.className = "dialog__hinweis";
+      tipp.textContent = "Tipp: Öffnest du die Tafel eine Woche lang nicht, kann Safari deine Daten löschen. " +
+        "Als App vom Home-Bildschirm passiert das nicht.";
+      inhalt.appendChild(tipp);
+    }
     inhalt.querySelector("button").addEventListener("click", function () {
       T.sicherungSpeichern();
       inhalt.closest("dialog").close();
@@ -106,6 +139,8 @@
   T.zeigeReiter();
   T.zeigeTafel();
   erinnerung();
+  // Browser bitten, die Daten nicht von selbst zu löschen (wirkt nicht überall, schadet nie)
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
 
   // ---------- Offline-Speicher (sw.js): nur über http(s), nicht beim Öffnen per Doppelklick ----------
   if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {

@@ -76,8 +76,8 @@ button, label.btn { touch-action: manipulation; }   /* kein Doppeltipp-Zoom am i
 }
 .reiter__stift {
   flex: none;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   margin-right: 6px;
   display: grid;
   place-items: center;
@@ -125,7 +125,9 @@ button, label.btn { touch-action: manipulation; }   /* kein Doppeltipp-Zoom am i
 /* Werkzeug (Einstellungen, Löschen) in der Titelleiste, nur wenn ausgewählt */
 .widget__werkzeug { display: none; gap: 6px; }
 .widget.is-ausgewaehlt .widget__werkzeug { display: flex; }
-.widget__werkzeug .btn { width: 40px; min-width: 40px; min-height: 40px; height: 40px; box-shadow: none; border-width: var(--hair); }
+.widget__werkzeug .btn { position: relative; width: 40px; min-width: 40px; min-height: 40px; height: 40px; box-shadow: none; border-width: var(--hair); }
+.widget__werkzeug .btn::before { content: ""; position: absolute; inset: -3px; }   /* Trefferfläche 46 px, ohne dass die Titelleiste wächst */
+.widget__loeschen { margin-right: 12px; }
 
 .widget__inhalt {
   flex: 1;
@@ -200,6 +202,14 @@ button, label.btn { touch-action: manipulation; }   /* kein Doppeltipp-Zoom am i
 .leiste__knopf:hover { background: var(--white); border-color: var(--line-color); }
 .leiste__knopf:active { transform: translate(1px, 1px); }
 .leiste__knopf[hidden] { display: none; }
+
+/* Schmal (iPad hochkant): ohne leere Mittelspalte, Knöpfe enger, Icons 3-fach (42 px) statt 4-fach */
+@media (max-width: 960px) {
+  .leiste { display: flex; justify-content: space-between; }
+  .leiste > div:first-child { display: none; }
+  .leiste__knopf { min-width: 64px; padding: 6px 2px 4px; font-size: .75rem; letter-spacing: 0; }
+  .leiste__knopf img { width: 42px; height: 42px; }
+}
 
 /* Dezenter Hinweis (z. B. Sicherung fällig): gelbes Quadrat mit ! */
 .hat-hinweis::after {
@@ -419,7 +429,7 @@ label.btn { cursor: pointer; }
 .text { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
 .text__leiste { flex: none; display: flex; flex-wrap: wrap; gap: 6px; }
 .widget:not(.is-ausgewaehlt) .text__leiste { display: none; }
-.text__leiste .btn { min-height: 40px; padding: 0 12px; font-size: 1rem; }
+.text__leiste .btn { min-height: 44px; min-width: 44px; padding: 0 12px; font-size: 1rem; }
 .text__leiste .btn[aria-pressed="true"] { background: var(--active-bg); color: var(--active-text); border-color: var(--active-bg); }
 .text__leiste .btn[aria-pressed="true"] mark { color: var(--text); }
 .text__feld {
@@ -532,8 +542,8 @@ mark[data-farbe="rosa"] { background: linear-gradient(transparent 55%, var(--tin
 .folien__zeile .row__num { width: 40px; height: 40px; font-size: 1rem; }
 .folien__zeile .row__title { flex: 1; min-width: 0; font-size: 1.0625rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .folien__vorschau { flex: none; width: 64px; height: 40px; object-fit: cover; border: var(--hair) solid var(--line-color); }
-.folien__knoepfe { flex: none; display: flex; gap: 4px; }
-.folien__knoepfe .btn { min-width: 40px; min-height: 40px; }
+.folien__knoepfe { flex: none; display: flex; gap: 8px; }
+.folien__knoepfe .btn { min-width: 44px; min-height: 44px; }
 .folie__abstand { margin-top: 16px; }
 
 /* ============================================================
@@ -632,7 +642,7 @@ mark[data-farbe="rosa"] { background: linear-gradient(transparent 55%, var(--tin
 .ablauf__zeile { flex-wrap: wrap; padding: 8px 10px; gap: 8px; }
 .ablauf__zeile .feld { flex: 1 1 200px; min-width: 0; width: auto; }
 .ablauf__farben { flex: none; display: flex; flex-wrap: wrap; gap: 6px; }
-.ablauf__farbe { width: 40px; height: 40px; padding: 0; background: var(--c-teal); border: var(--frame-width) solid var(--white); outline: var(--hair) solid var(--line-color); cursor: pointer; touch-action: manipulation; }
+.ablauf__farbe { width: 44px; height: 44px; padding: 0; background: var(--c-teal); border: var(--frame-width) solid var(--white); outline: var(--hair) solid var(--line-color); cursor: pointer; touch-action: manipulation; }
 .ablauf__farbe[data-farbe="sage"] { background: var(--c-sage); }
 .ablauf__farbe[data-farbe="sun"] { background: var(--c-sun); }
 .ablauf__farbe[data-farbe="orange"] { background: var(--c-orange); }

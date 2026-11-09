@@ -150,7 +150,10 @@
     var wz = el.querySelector(".widget__werkzeug");
     if (!frei) wz.appendChild(T.iconKnopf("stift", a.farbwahl ? "Name und Farben ändern" : "Name ändern", function () { passeAn(el, w, a); }));
     if (inst.einstellungen) wz.appendChild(T.iconKnopf("zahnrad", "Einstellungen", inst.einstellungen));
-    wz.appendChild(T.iconKnopf("muell", "Widget löschen", function () { entferne(w.id); }));
+    // Mülleimer ganz links mit Abstand: weit weg vom − / + zum Einklappen (Fehltipp = Daten weg)
+    var weg = T.iconKnopf("muell", "Widget löschen", function () { entferne(w.id); });
+    weg.classList.add("widget__loeschen");
+    wz.prepend(weg);
   }
 
   function leerHinweis() { leer.hidden = kurs().widgets.length > 0; }
@@ -239,6 +242,7 @@
   tafel.addEventListener("pointermove", function (e) {
     if (!zug) return;
     var dx = e.clientX - zug.sx, dy = e.clientY - zug.sy, s = zug.start, w = zug.w;
+    if (!zug.bewegt && Math.abs(dx) < 8 && Math.abs(dy) < 8) return;   // Fingerzittern beim Antippen ist noch kein Ziehen
     var B = tafel.clientWidth, H = tafel.clientHeight;
     if (!zug.ecke) {
       w.x = Math.max(0, Math.min(raste(s.x + dx), B - s.b));

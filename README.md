@@ -37,7 +37,7 @@ Alles, was du einträgst (Kurse, Widgets, Namensliste), bleibt **nur auf diesem 
 1. In Safari: **Sicherung → Sicherung speichern**. Die Datei landet in „Dateien“.
 2. In der App: **Sicherung → Sicherung laden** und die Datei wählen.
 
-Dasselbe gilt für den Umzug auf ein anderes Gerät. Die Tafel erinnert dich nach 14 Tagen an eine neue Sicherung.
+Dasselbe gilt für den Umzug auf ein anderes Gerät. Die Tafel erinnert dich nach 6 Tagen an eine neue Sicherung, denn Safari (ohne Home-Bildschirm) kann die Daten löschen, wenn du die Seite eine Woche lang nicht öffnest.
 
 ## Seite auf dem eigenen Rechner ansehen
 

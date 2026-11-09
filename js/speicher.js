@@ -12,8 +12,7 @@
   T.neuerKurs = function (name) { return { id: T.neueId(), name: name, widgets: [] }; };
 
   function startZustand() {
-    var kurse = [];
-    for (var i = 1; i <= 9; i++) kurse.push(T.neuerKurs("Kurs " + i));
+    var kurse = [T.neuerKurs("Kurs 1")];   // weitere Kurse legt man mit + an
     return { version: 1, aktiv: kurse[0].id, kurse: kurse, letzteSicherung: null };
   }
 
@@ -54,6 +53,16 @@
   T.aktiverKurs = function () {
     var z = T.zustand;
     return z.kurse.filter(function (k) { return k.id === z.aktiv; })[0] || z.kurse[0];
+  };
+
+  // Läuft in irgendeinem Kurs ein Timer oder eine Stoppuhr? (dann bleibt der Bildschirm an)
+  T.laeuftEinTimer = function (z, jetzt) {
+    return z.kurse.some(function (k) {
+      return k.widgets.some(function (w) {
+        var d = w.typ === "timer" && w.daten;
+        return !!d && (d.modus === "stoppuhr" ? d.startUm != null : d.endeUm != null && d.endeUm > jetzt);
+      });
+    });
   };
 
   var vollGemeldet = false;

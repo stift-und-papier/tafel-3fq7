@@ -63,7 +63,8 @@
     if (fokus) liste.querySelector('[aria-selected="true"]').focus();
   }
 
-  function bearbeite(id) {
+  // zurueck: Kurs wurde gerade erst mit + angelegt → ohne „Fertig“ wieder weg, zurück zu diesem Kurs
+  function bearbeite(id, zurueck) {
     var k = finde(id);
     var feld = document.createElement("div");
     feld.innerHTML = '<label class="feld-label" for="kurs-name">Name des Kurses</label>' +
@@ -74,6 +75,10 @@
     if (T.zustand.kurse.length > 1) knoepfe.push({ text: "Kurs löschen", wert: "loeschen", hell: true });
     T.dialog({ titel: "Kurs bearbeiten", icon: "stift", inhalt: feld, knoepfe: knoepfe }).then(function (wert) {
       offen = null;
+      if (zurueck && wert !== "ok") {
+        T.zustand.kurse.splice(T.zustand.kurse.indexOf(k), 1);
+        return wechsle(zurueck, false);
+      }
       T.zeigeReiter();
       if (wert === "ok" && input.value.trim()) {
         k.name = input.value.trim();
@@ -136,9 +141,9 @@
   });
 
   document.getElementById("knopf-neuer-kurs").addEventListener("click", function () {
-    var k = T.neuerKurs("Kurs " + (T.zustand.kurse.length + 1));
+    var k = T.neuerKurs("Kurs " + (T.zustand.kurse.length + 1)), vorher = T.zustand.aktiv;
     T.zustand.kurse.push(k);
     wechsle(k.id, false);
-    bearbeite(k.id);
+    bearbeite(k.id, vorher);
   });
 })();

@@ -206,7 +206,6 @@ mark, .mark {
 .btn--sun { background: var(--c-sun); border-color: var(--c-petrol-dark); box-shadow: var(--shadow); }
 .btn--sun:hover { background: var(--c-honey); }
 .btn--sun:active { box-shadow: 3px 3px 0 var(--shadow-color); }
-&
 .btn--small { min-height: 32px; min-width: 32px; padding: 0 8px; box-shadow: none; border-width: var(--hair); }
 .btn--small img { width: 14px; height: 14px; }
 

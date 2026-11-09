@@ -297,12 +297,18 @@
           if (w !== "ok") return;
           var alt = liste().slice(), k = T.aktiverKurs();
           // Gleiche Namen behalten ihre ID (und damit „fehlt heute“, Ziehungen, Gruppen)
-          k.schueler = feld.value.split("\n").map(function (z) { return z.trim().slice(0, 30); }).filter(Boolean)
+          var neu = feld.value.split("\n").map(function (z) { return z.trim().slice(0, 30); }).filter(Boolean)
             .slice(0, MAX_NAMEN).map(function (n) {
               for (var i = 0; i < alt.length; i++) if (alt[i].name === n) return alt.splice(i, 1)[0];
               return { id: T.neueId(), name: n };
             });
-          geaendert();
+          function uebernehme() { k.schueler = neu; geaendert(); }
+          // alt = Namen, die wegfallen. Ein, zwei Tippfehler gehen ohne Frage, mehr (z. B. Feld versehentlich geleert) nicht.
+          if (alt.length < 3) return uebernehme();
+          var welche = alt.slice(0, 5).map(function (s) { return s.name; }).join(", ") + (alt.length > 5 ? " …" : ".");
+          T.frage("Namen entfernen?", (neu.length ? alt.length + " Namen fallen aus der Liste: " + welche
+            : "Die ganze Liste mit " + alt.length + " Namen wird geleert.") + " Das lässt sich nicht rückgängig machen.",
+            "Ja, entfernen").then(function (ja) { if (ja) uebernehme(); });
         });
         setTimeout(function () { feld.focus(); }, 0);
       }

@@ -2,7 +2,7 @@
 <html lang="de">
 <meta charset="utf-8">
 <title>Selbsttest</title>
-<!-- Prüft, dass kaputte Sicherungsdateien abgelehnt werden. Öffnen und Ergebnis lesen. -->
+<!-- Prüft, dass kaputte Sicherungsdateien abgelehnt werden und wann der Bildschirm wach bleibt. Öffnen und Ergebnis lesen. -->
 <pre id="aus"></pre>
 <script src="js/speicher.js"></script>
 <script>
@@ -16,6 +16,14 @@
   soll("Position als Text abgelehnt", !T.pruefe({ version: 1, kurse: [{ id: "k1", name: "7b", widgets: [Object.assign({}, w, { x: "12" })] }] }));
   soll("fehlende Widget-Daten abgelehnt", !T.pruefe({ version: 1, kurse: [{ id: "k1", name: "7b", widgets: [Object.assign({}, w, { daten: null })] }] }));
   soll("null abgelehnt", !T.pruefe(null));
+
+  // Bildschirm wach halten: läuft irgendwo ein Timer oder eine Stoppuhr?
+  function mitTimer(daten) { return { kurse: [{ widgets: [w] }, { widgets: [{ typ: "timer", daten: daten }] }] }; }
+  soll("kein Timer → nicht wach", !T.laeuftEinTimer(gut, 1000));
+  soll("Timer läuft (anderer Kurs) → wach", T.laeuftEinTimer(mitTimer({ modus: "timer", endeUm: 5000, startUm: null }), 1000));
+  soll("Timer abgelaufen → nicht wach", !T.laeuftEinTimer(mitTimer({ modus: "timer", endeUm: 500, startUm: null }), 1000));
+  soll("Timer pausiert → nicht wach", !T.laeuftEinTimer(mitTimer({ modus: "timer", endeUm: null, startUm: null }), 1000));
+  soll("Stoppuhr läuft → wach", T.laeuftEinTimer(mitTimer({ modus: "stoppuhr", endeUm: null, startUm: 900 }), 1000));
   aus.textContent += fehler ? "\n" + fehler + " Fehler" : "\nAlles in Ordnung";
 </script>
 </html>
